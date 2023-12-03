@@ -132,7 +132,7 @@ jobs:
   deploy_nuget:
     name: Deploying NuGet package
     needs: [version, build_net20, build_net_standard20]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Extracting all artifacts
