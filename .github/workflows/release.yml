@@ -123,7 +123,7 @@ jobs:
     - name: Deploy GitHub Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: ${{github.workspace}}/*.zip
+        artifacts: ${{github.workspace}}\*.zip
         tag: ${{ needs.version.outputs.new_tag }}
         name: Auto ${{ needs.version.outputs.new_tag }}
         body: ${{ needs.version.outputs.changelog }}
@@ -136,6 +136,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Extracting all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: bin
     - name: Checkout nessesary files from repo
       uses: actions/checkout@v3
       with:
