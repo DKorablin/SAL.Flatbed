@@ -120,9 +120,13 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         path: bin
+    - name: Zip artifact
+      run: zip -qq -r release.zip *.*
+      working-directory: ${{github.workspace}}/bin
     - name: Deploy GitHub Release
       uses: ncipollo/release-action@v1
       with:
+        artifacts: ${{github.workspace}}/release.zip
         tag: ${{ needs.version.outputs.new_tag }}
         name: Auto ${{ needs.version.outputs.new_tag }}
         body: ${{ needs.version.outputs.changelog }}
