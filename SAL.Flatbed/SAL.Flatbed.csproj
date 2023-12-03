@@ -15,16 +15,9 @@
 		<Deterministic>false</Deterministic>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<OutputPath>..\bin\</OutputPath>
-		<DocumentationFile>..\bin\SAL.Flatbed.xml</DocumentationFile>
-		<IntermediateOutputPath>..\obj\NetStandard\Release\</IntermediateOutputPath>
+		<OutputPath>..\..\bin\</OutputPath>
+		<DocumentationFile>..\..\bin\SAL.Flatbed.xml</DocumentationFile>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<SignAssembly>True</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
 		<CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<OutputPath>..\bin\</OutputPath>
-		<IntermediateOutputPath>..\obj\NetStandard\Debug\</IntermediateOutputPath>
 	</PropertyGroup>
 </Project>
