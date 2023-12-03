@@ -129,7 +129,7 @@ jobs:
         path: bin
     - name: Pack artifacts
       run: nuget pack ${{env.SolutionName}}.dll.nuspec -Version ${{needs.version.outputs.new_version}} -OutputDirectory nupkg
-    - name: Deploy GitHub
+    - name: Deploy GitHub Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: ${{github.workspace}}/nupkg/*.nupkg
@@ -138,3 +138,5 @@ jobs:
         body: ${{ needs.version.outputs.changelog }}
         artifactErrorsFailBuild: true
         generateReleaseNotes: true
+    - name: Deploy GitHub Package
+      run: dotnet nuget push ${{github.workspace}}/nupkg/${{env.SolutionName}}.nupkg --source "github"
