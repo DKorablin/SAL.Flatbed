@@ -139,4 +139,4 @@ jobs:
         artifactErrorsFailBuild: true
         generateReleaseNotes: true
     - name: Deploy GitHub Package
-      run: dotnet nuget push ${{github.workspace}}/nupkg/${{env.SolutionName}}.nupkg --source "github"
+      run: dotnet nuget push ${{github.workspace}}/nupkg/${{env.SolutionName}}.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
