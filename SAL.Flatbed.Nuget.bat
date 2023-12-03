@@ -1,0 +1,1 @@
+..\..\..\nuget.exe pack SAL.Flatbed\SAL.Flatbed.csproj -IncludeReferencedProjects

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--This to lines are added to separate build process between .NET & .NET Standart-->
+    <BaseOutputPath>$(MSBuildProjectDirectory)/../obj/net20/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../obj/net20/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+    <Version Condition="'$(Version)' == ''">1.2.9.2</Version>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1FAFE554-DF19-4AB5-A706-E86A4027B016}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SAL.Flatbed</RootNamespace>
+    <AssemblyName>SAL.Flatbed</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\SAL.Flatbed.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attribute\PluginEntryPointAttribute.cs" />
+    <Compile Include="Data\Members\PluginEventInfo.cs" />
+    <Compile Include="Data\Members\PluginMethodInfo.cs" />
+    <Compile Include="Data\Members\PluginParameterInfo.cs" />
+    <Compile Include="Data\Members\PluginPropertyInfo.cs" />
+    <Compile Include="Data\Members\PluginTypeInfo.cs" />
+    <Compile Include="Data\UnresolvedPlugin.cs" />
+    <Compile Include="Events\PluginEventArgs.cs" />
+    <Compile Include="Interface\ISettingsPluginProvider.cs" />
+    <Compile Include="Interface\Members\IPluginEventInfo.cs" />
+    <Compile Include="Interface\Members\IPluginMemberInfo.cs" />
+    <Compile Include="Interface\Members\IPluginMethodInfo.cs" />
+    <Compile Include="Interface\Members\IPluginParameterInfo.cs" />
+    <Compile Include="Interface\IPluginStorage.cs" />
+    <Compile Include="Data\Members\PluginMemberInfo.cs" />
+    <Compile Include="Events\DataEmptyEventArgs.cs" />
+    <Compile Include="Events\DataEventArgs.cs" />
+    <Compile Include="Enum\ConnectMode.cs" />
+    <Compile Include="Enum\DisconnectMode.cs" />
+    <Compile Include="Interface\IPluginSettings.cs" />
+    <Compile Include="Interface\IHost.cs" />
+    <Compile Include="Interface\IPluginDescription.cs" />
+    <Compile Include="Interface\IPluginKernel.cs" />
+    <Compile Include="Interface\IPluginProvider.cs" />
+    <Compile Include="Interface\ISettingsProvider.cs" />
+    <Compile Include="Interface\IPlugin.cs" />
+    <Compile Include="HostBase.cs" />
+    <Compile Include="Interface\IHostItem.cs" />
+    <Compile Include="Data\PluginDescription.cs" />
+    <Compile Include="Interface\Members\IPluginPropertyInfo.cs" />
+    <Compile Include="Interface\Members\IPluginTypeInfo.cs" />
+    <Compile Include="PluginConstant.cs" />
+    <Compile Include="PluginStorage.cs" />
+    <Compile Include="PluginUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\AlphaOmega %28NoPwd%29.snk">
+      <Link>AlphaOmega %28NoPwd%29.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <AssemblyAttributes Include="AssemblyVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyFileVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyInformationalVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+    </ItemGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs" AssemblyAttributes="@(AssemblyAttributes)" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)Version.cs" />
+    </ItemGroup>
+  </Target>
+</Project>

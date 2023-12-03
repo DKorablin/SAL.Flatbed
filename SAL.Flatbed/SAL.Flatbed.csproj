@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<RootNamespace>SAL.Flatbed</RootNamespace>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<AssemblyTitle>SAL.Flatbed</AssemblyTitle>
+		<AssemblyName>SAL.Flatbed</AssemblyName>
+		<Company>Danila Korablin</Company>
+		<Product>Software Abstraction Layer Core</Product>
+		<Copyright>Copyright © Danila Korablin 2009-2023</Copyright>
+		<Configuration>Debug</Configuration>
+		<AssemblyVersion>1.2.9.2</AssemblyVersion>
+		<FileVersion>1.2.9.2</FileVersion>
+		<Deterministic>false</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<OutputPath>..\bin\</OutputPath>
+		<DocumentationFile>..\bin\SAL.Flatbed.xml</DocumentationFile>
+		<IntermediateOutputPath>..\obj\NetStandard\Release\</IntermediateOutputPath>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\..\..\AlphaOmega %28NoPwd%29.snk</AssemblyOriginatorKeyFile>
+		<CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<OutputPath>..\bin\</OutputPath>
+		<IntermediateOutputPath>..\obj\NetStandard\Debug\</IntermediateOutputPath>
+	</PropertyGroup>
+</Project>
