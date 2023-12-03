@@ -121,8 +121,8 @@ jobs:
       with:
         path: bin
     - name: Zip artifact
-      run: zip -qq -r release.zip ${{github.workspace}}/bin/*
-      working-directory: ${{github.workspace}}/bin
+      run: zip -qq -r release.zip bin
+      working-directory: ${{github.workspace}}
     - name: Deploy GitHub Release
       uses: ncipollo/release-action@v1
       with:
