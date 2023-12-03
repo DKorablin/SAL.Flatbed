@@ -121,7 +121,7 @@ jobs:
       with:
         path: bin
     - name: Zip artifact
-      run: zip -qq -r release.zip *.*
+      run: zip -qq -r release.zip
       working-directory: ${{github.workspace}}/bin
     - name: Deploy GitHub Release
       uses: ncipollo/release-action@v1
@@ -136,7 +136,7 @@ jobs:
   deploy_nuget:
     name: Deploying NuGet package
     needs: [version, build_net20, build_net_standard20]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Extracting all artifacts
