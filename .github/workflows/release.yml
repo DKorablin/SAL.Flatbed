@@ -110,11 +110,31 @@ jobs:
         path: ${{github.workspace}}/bin/*
         if-no-files-found: error
 
-  deploy:
-    name: Packing and deploying NuGet package to Release
+  deploy_release:
+    name: Deploying artifacts
     needs: [version, build_net20, build_net_standard20]
     runs-on: windows-latest
-    
+
+    steps:
+    - name: Extracting all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: bin
+    - name: Deploy GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{github.workspace}}/*.zip
+        tag: ${{ needs.version.outputs.new_tag }}
+        name: Auto ${{ needs.version.outputs.new_tag }}
+        body: ${{ needs.version.outputs.changelog }}
+        artifactErrorsFailBuild: true
+        generateReleaseNotes: true
+
+  deploy_nuget:
+    name: Deploying NuGet package
+    needs: [version, build_net20, build_net_standard20]
+    runs-on: ubuntu-latest
+
     steps:
     - name: Checkout nessesary files from repo
       uses: actions/checkout@v3
@@ -129,16 +149,7 @@ jobs:
         path: bin
     - name: Pack artifacts
       run: nuget pack ${{env.SolutionName}}.dll.nuspec -Version ${{needs.version.outputs.new_version}} -OutputDirectory nupkg
-    - name: Deploy GitHub Release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: ${{github.workspace}}/nupkg/*.nupkg
-        tag: ${{ needs.version.outputs.new_tag }}
-        name: Auto ${{ needs.version.outputs.new_tag }}
-        body: ${{ needs.version.outputs.changelog }}
-        artifactErrorsFailBuild: true
-        generateReleaseNotes: true
-    - name: Prep packages
+    - name: Pepare package source
       run: dotnet nuget add source --username DKorablin --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DKorablin/index.json"
-    - name: Deploy GitHub Package
+    - name: Deploy GitHub package
       run: dotnet nuget push nupkg\*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
