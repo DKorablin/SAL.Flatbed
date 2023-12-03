@@ -5,13 +5,13 @@
 		<version>0.0.0.0</version>
 		<authors>DKorablin</authors>
 		<license type="expression">Apache-1.0</license>
-		<readme>docs\readme.md</readme>
+		<readme>docs\README.md</readme>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<projectUrl>https://dkorablin.ru/project/Default.aspx?File=76</projectUrl>
 		<description>Software abstraction layer core API. Base SAL Interface.</description>
 		<releaseNotes></releaseNotes>
 		<copyright>Danila Korablin</copyright>
-		<tags>SAL</tags>
+		<tags>SAL, Plugins</tags>
 		<dependencies>
 			<group targetFramework="net20">
 			</group>
@@ -21,8 +21,8 @@
 	</metadata>
 	<files>
 		<file src="readme.md" target="docs" />
-		<file src="bin\SAL.Flatbed.xml" target="xml" />
-		<file src="bin\SAL.Flatbed.dll" target="lib\net20" />
+		<file src="bin\net20\SAL.Flatbed.xml" target="xml" />
+		<file src="bin\net20\SAL.Flatbed.dll" target="lib\net20" />
 		<file src="bin\netstandard2.0\SAL.Flatbed.dll" target="lib\netstandard2.0" />
 	</files>
 </package>
