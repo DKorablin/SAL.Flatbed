@@ -138,5 +138,7 @@ jobs:
         body: ${{ needs.version.outputs.changelog }}
         artifactErrorsFailBuild: true
         generateReleaseNotes: true
+    - name: Prep packages
+      run: dotnet nuget add source --username DKorablin --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DKorablin/index.json"
     - name: Deploy GitHub Package
       run: dotnet nuget push ${{github.workspace}}/nupkg/${{env.SolutionName}}.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
