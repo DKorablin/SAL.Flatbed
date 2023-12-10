@@ -54,7 +54,7 @@ jobs:
       uses: mathieudutour/github-tag-action@v6.1
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
-        custom_tag: 1.2.9
+        #custom_tag: 1.2.9
 
   build_net_framework:
     name: Building .NET Framework assembly
