@@ -82,7 +82,7 @@ jobs:
         if-no-files-found: error
 
   build_net:
-    name: Build .NET assembly
+    name: Building .NET assembly
     needs: [version]
     runs-on: ubuntu-latest
     steps:
