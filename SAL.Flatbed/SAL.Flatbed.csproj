@@ -5,7 +5,6 @@
 		<RootNamespace>SAL.Flatbed</RootNamespace>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<AssemblyTitle>SAL.Flatbed</AssemblyTitle>
-		<AssemblyName>SAL.Flatbed</AssemblyName>
 		<Company>Danila Korablin</Company>
 		<Product>Software Abstraction Layer Core</Product>
 		<Copyright>Copyright © Danila Korablin 2009-2023</Copyright>
