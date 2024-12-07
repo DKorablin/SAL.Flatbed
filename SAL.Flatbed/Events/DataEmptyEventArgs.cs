@@ -7,7 +7,7 @@ namespace SAL.Flatbed
 	public class DataEmptyEventArgs : DataEventArgs
 	{
 		/// <summary>Zero data</summary>
-		public override Int32 Count { get { return 0; } }
+		public override Int32 Count { get => 0; }
 
 		/// <summary>Empty keys array</summary>
 		public override IEnumerable<String> Keys { get { yield break; } }
@@ -17,9 +17,8 @@ namespace SAL.Flatbed
 		/// <param name="key">Key by which to get data</param>
 		/// <returns>Data by argument</returns>
 		public override T GetData<T>(String key)
-		{
-			return default(T);
-		}
+			=> default;
+
 		/// <summary>The empty argument constructor is only available <see cref="DataEventArgs"/></summary>
 		internal DataEmptyEventArgs() { }
 	}

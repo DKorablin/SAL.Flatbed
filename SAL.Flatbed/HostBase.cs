@@ -7,7 +7,7 @@ namespace SAL.Flatbed
 	public abstract class HostBase : IHost, IDisposable
 	{
 		private PluginStorage _storage;
-		#region Properties
+
 		/// <summary>An object that is encapsulated by an interface</summary>
 		public abstract Object Object { get; }
 
@@ -19,13 +19,12 @@ namespace SAL.Flatbed
 				if(this._storage == null)
 				{
 					this._storage = new PluginStorage(this);
-					AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+					AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
 				}
 				return this._storage;
 			}
 		}
-		#endregion Properties
-		#region Methods
+
 		/// <summary>Unload all loaded plugins</summary>
 		/// <param name="reason">Reason why plugins are unloaded</param>
 		public abstract void UnloadPlugins(DisconnectMode reason);
@@ -71,10 +70,9 @@ namespace SAL.Flatbed
 				plugins = plugins.ParentProvider;
 			}
 
-			AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+			AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
 
 			GC.SuppressFinalize(this);
 		}
-		#endregion Methods
 	}
 }

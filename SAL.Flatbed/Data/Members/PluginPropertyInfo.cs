@@ -10,22 +10,22 @@ namespace SAL.Flatbed
 		private PropertyInfo Property { get; }
 
 		/// <summary>Property name</summary>
-		public override String Name { get { return this.Property.Name; } }
+		public override String Name { get => this.Property.Name; }
 
 		/// <summary>String naming of element type</summary>
-		public override String TypeName { get { return this.Property.PropertyType.ToString(); } }
+		public override String TypeName { get => this.Property.PropertyType.ToString(); }
 
 		/// <summary>Element type</summary>
-		public override MemberTypes MemberType { get { return this.Property.MemberType; } }
+		public override MemberTypes MemberType { get => this.Property.MemberType; }
 
 		/// <summary>Count of input parameters</summary>
-		public Int32 Count { get { return this.Property.GetIndexParameters().Length; } }
+		public Int32 Count { get => this.Property.GetIndexParameters().Length; }
 
 		/// <summary>This property can be read</summary>
-		public Boolean CanRead { get { return this.Property.CanRead; } }
+		public Boolean CanRead { get => this.Property.CanRead; }
 
 		/// <summary>This property can be write</summary>
-		public Boolean CanWrite { get { return this.Property.CanWrite; } }
+		public Boolean CanWrite { get => this.Property.CanWrite; }
 
 		/// <summary>Create instance of property description</summary>
 		/// <param name="property">Property reflection</param>
@@ -34,9 +34,7 @@ namespace SAL.Flatbed
 		/// <exception cref="ArgumentNullException">Property is required</exception>
 		public PluginPropertyInfo(PropertyInfo property, Object target, PluginMemberInfo parent)
 			: base(property.PropertyType, target, parent)
-		{
-			this.Property = property ?? throw new ArgumentNullException(nameof(property));
-		}
+			=> this.Property = property ?? throw new ArgumentNullException(nameof(property));
 
 		/// <summary>Get list of all parameters if property contains index parameters</summary>
 		/// <returns>List of all index parameters</returns>
@@ -52,9 +50,8 @@ namespace SAL.Flatbed
 		public Object Get(params Object[] parameters)
 		{
 			PropertyInfo info = this.Property;
-			Object target = base.GetTarget();
-			if(target == null)
-				throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
+			Object target = base.GetTarget()
+				?? throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
 
 			return info.GetValue(target, parameters);//Don't forget about CanRead
 		}
@@ -65,9 +62,8 @@ namespace SAL.Flatbed
 		public void Set(Object value, params Object[] parameters)
 		{
 			PropertyInfo info = this.Property;
-			Object target = base.GetTarget();
-			if(target == null)
-				throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
+			Object target = base.GetTarget()
+				?? throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
 
 			info.SetValue(target, value, null);//Don't forget about CanWrite
 		}

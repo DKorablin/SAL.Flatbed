@@ -5,12 +5,9 @@ namespace SAL.Flatbed
 	/// <summary>Basic host interface that resolved in any host</summary>
 	public interface IHost : IHostItem
 	{
-		#region Properties
 		/// <summary>Array of loaded plugins</summary>
 		IPluginStorage Plugins { get; }
 
-		#endregion Properties
-		#region Methods
 		/// <summary>Unload all loaded plugins by invoking <see cref="IPlugin.OnDisconnection"/> method</summary>
 		/// <param name="reason">Reason why plugins are unloaded</param>
 		void UnloadPlugins(DisconnectMode reason);
@@ -24,6 +21,5 @@ namespace SAL.Flatbed
 		/// <param name="name">The key of an object from session</param>
 		/// <returns>Values from session by the key</returns>
 		Object GetSessionValue(String name);
-		#endregion Methods
 	}
 }

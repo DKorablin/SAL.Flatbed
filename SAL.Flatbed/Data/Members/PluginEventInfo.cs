@@ -6,7 +6,7 @@ namespace SAL.Flatbed
 	/// <summary>Plugin event information</summary>
 	public class PluginEventInfo : PluginMemberInfo, IPluginEventInfo
 	{
-		private new EventInfo Member { get { return (EventInfo)base.Member; } }
+		private new EventInfo Member { get => (EventInfo)base.Member; }
 
 		/// <summary>Create instance of plugin event information</summary>
 		/// <param name="evt">Event reflection</param>
@@ -22,12 +22,10 @@ namespace SAL.Flatbed
 		/// <exception cref="ArgumentNullException">Handler or target is null</exception>
 		public void AddEventHandler(EventHandler<DataEventArgs> handler)
 		{
-			if(handler == null)
-				throw new ArgumentNullException(nameof(handler));
+			_ = handler ?? throw new ArgumentNullException(nameof(handler));
 
-			Object target = base.GetTarget();
-			if(target == null)
-				throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
+			Object target = base.GetTarget()
+				?? throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
 
 			this.Member.AddEventHandler(target, handler);
 		}
@@ -37,12 +35,10 @@ namespace SAL.Flatbed
 		/// <exception cref="ArgumentNullException">handler or target is null</exception>
 		public void RemoveEventHandler(EventHandler<DataEventArgs> handler)
 		{
-			if(handler == null)
-				throw new ArgumentNullException(nameof(handler));
+			_ = handler ?? throw new ArgumentNullException(nameof(handler));
 
-			Object target = base.GetTarget();
-			if(target == null)
-				throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
+			Object target = base.GetTarget()
+				?? throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
 
 			this.Member.RemoveEventHandler(target, handler);
 		}

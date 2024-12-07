@@ -10,7 +10,7 @@ namespace SAL.Flatbed
 		public static new readonly DataEventArgs Empty = new DataEmptyEventArgs();
 
 		/// <summary>Version</summary>
-		public virtual Int32 Version { get { return 0; } }
+		public virtual Int32 Version { get => 0; }
 
 		/// <summary>Arguments count</summary>
 		public abstract Int32 Count { get; }

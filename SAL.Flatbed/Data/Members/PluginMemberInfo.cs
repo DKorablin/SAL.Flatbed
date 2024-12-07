@@ -11,27 +11,24 @@ namespace SAL.Flatbed
 		private TraceSource _trace;
 
 		/// <summary>Member name</summary>
-		public virtual String Name { get { return this.Member.Name; } }
+		public virtual String Name { get => this.Member.Name; }
 
 		/// <summary>Full member name</summary>
 		public virtual String TypeName
 		{
-			get
-			{
-				return this.Member.ReflectedType == null
-					? ((Type)this.Member).FullName
-					: this.Member.ReflectedType.FullName;
-			}
+			get => this.Member.ReflectedType == null
+				? ((Type)this.Member).FullName
+				: this.Member.ReflectedType.FullName;
 		}
 
 		/// <summary>Member type</summary>
-		public virtual MemberTypes MemberType { get { return this.Member.MemberType; } }
+		public virtual MemberTypes MemberType { get => this.Member.MemberType; }
 
 		/// <summary>Reflected member information</summary>
 		protected MemberInfo Member { get; }
 
 		/// <summary>Reflected member type</summary>
-		protected Type ReflectedType { get { return this.Member as Type; } }
+		protected Type ReflectedType { get => this.Member as Type; }
 
 		private PluginMemberInfo Parent { get; }
 
@@ -41,7 +38,7 @@ namespace SAL.Flatbed
 		/// <summary>Trace instance</summary>
 		protected internal TraceSource Trace
 		{
-			get { return this._trace ?? (this._trace = PluginMemberInfo.CreateTraceSource(PluginConstant.TraceSourceName)); }
+			get => this._trace ?? (this._trace = PluginMemberInfo.CreateTraceSource(PluginConstant.TraceSourceName));
 		}
 
 		/// <summary>Create instance of plugin member information</summary>
@@ -62,26 +59,20 @@ namespace SAL.Flatbed
 		/// <typeparam name="T">The type of class or interface that is supposed to be implemented in the plugin</typeparam>
 		/// <returns>Target implements this type</returns>
 		public Boolean InstanceOf<T>()
-		{
-			return this.Target is T;
-		}
+			=> this.Target is T;
 
 		/// <summary>Check for inheritance from specific type</summary>
 		/// <param name="type">Check for inheritance of this type</param>
 		/// <returns>Inherit from argument type</returns>
 		public Boolean InstanceOf(Type type)
 		{
-			if(type == null)
-				throw new ArgumentNullException(nameof(type));
+			_ = type ?? throw new ArgumentNullException(nameof(type));
 
 			if(this.Target == null)
 				return false;
 
 			Type thisType = this.ReflectedType;
-			if(thisType == null)
-				return false;
-
-			return PluginUtils.InstanceOf(type, thisType);
+			return thisType != null && PluginUtils.InstanceOf(type, thisType);
 		}
 
 		/// <summary>Get the object instance for reflection invocation</summary>

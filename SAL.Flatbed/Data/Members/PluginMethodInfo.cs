@@ -7,7 +7,7 @@ namespace SAL.Flatbed
 	/// <summary>Description of public plugin method</summary>
 	public class PluginMethodInfo : PluginMemberInfo, IPluginMethodInfo
 	{
-		private new MethodBase Member { get { return (MethodBase)base.Member; } }
+		private new MethodBase Member { get => (MethodBase)base.Member; }
 
 		/// <summary>Method invocation result type</summary>
 		public IPluginTypeInfo ReturnType
@@ -31,7 +31,7 @@ namespace SAL.Flatbed
 		}
 
 		/// <summary>Input arguments count</summary>
-		public Int32 Count { get { return this.Member.GetParameters().Length; } }
+		public Int32 Count { get => this.Member.GetParameters().Length; }
 
 		/// <summary>Get all arguments that method accept</summary>
 		/// <returns>Array of all method arguments</returns>

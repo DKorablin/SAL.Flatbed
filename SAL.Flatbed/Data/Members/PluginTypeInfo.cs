@@ -14,72 +14,42 @@ namespace SAL.Flatbed
 		/// <summary>Type is Value type</summary>
 		public Boolean IsValueType
 		{
-			get
-			{
-				return base.ReflectedType == null
-					? false
-					: base.ReflectedType.IsValueType;
-			}
+			get => base.ReflectedType != null && base.ReflectedType.IsValueType;
 		}
 
 		/// <summary>Type is Array type</summary>
 		public Boolean IsArray
 		{
-			get
-			{
-				if(base.ReflectedType == null)
-					return false;
-				return base.ReflectedType.IsArray;
-			}
+			get => base.ReflectedType != null && base.ReflectedType.IsArray;
 		}
 
 		/// <summary>Type is Generic type</summary>
 		public Boolean IsGeneric
 		{
-			get
-			{
-				return base.ReflectedType == null
-					? false
-					: base.ReflectedType.IsGenericType;
-			}
+			get => base.ReflectedType != null && base.ReflectedType.IsGenericType;
 		}
 
 		/// <summary>Type is Enum type</summary>
 		private Boolean IsEnum
 		{
-			get
-			{
-				return base.ReflectedType == null
-					? false
-					: base.ReflectedType.IsEnum;
-			}
+			get => base.ReflectedType != null && base.ReflectedType.IsEnum;
 		}
 
 		private Boolean IsNativeType
 		{//TODO: Придумать алгоритм определения BCL сборок
-			get
-			{
-				//return base.Member.Module.Assembly.GetName().Name == "mscorlib";
-				return base.Member.Module.Assembly.GlobalAssemblyCache;
-			}
+			get => base.Member.Module.Assembly.GlobalAssemblyCache;//return base.Member.Module.Assembly.GetName().Name == "mscorlib";
 		}
 
 		/// <summary>Array of available members</summary>
 		public IEnumerable<IPluginMemberInfo> Members
 		{
-			get
-			{
-				return this._members ?? (this._members = new List<IPluginMemberInfo>(this.GetMembers()).ToArray());
-			}
+			get => this._members ?? (this._members = new List<IPluginMemberInfo>(this.GetMembers()).ToArray());
 		}
 
 		/// <summary>Type Generic array</summary>
 		public IEnumerable<IPluginTypeInfo> GenericMembers
 		{
-			get
-			{
-				return this._genericMemebers ?? (this._genericMemebers = new List<IPluginTypeInfo>(this.GetGenericMembers()).ToArray());
-			}
+			get => this._genericMemebers ?? (this._genericMemebers = new List<IPluginTypeInfo>(this.GetGenericMembers()).ToArray());
 		}
 
 		/// <summary>Create plugin type description which describes base types</summary>
@@ -94,11 +64,9 @@ namespace SAL.Flatbed
 		/// <summary>Get default element value (Enum or default value for the parameter entering the method)</summary>
 		/// <returns>Array of default values</returns>
 		public virtual String[] GetDefaultValues()
-		{
-			return this.IsEnum
+			=> this.IsEnum
 				? Enum.GetNames(base.ReflectedType)
 				: new String[] { };
-		}
 
 		/// <summary>Get public member by specifying it's name</summary>
 		/// <param name="name">Name of required member in plugin</param>
@@ -110,10 +78,10 @@ namespace SAL.Flatbed
 				throw new ArgumentNullException((name));
 
 			foreach(IPluginMemberInfo member in this.Members)
-				if(String.Equals(name, member.Name, StringComparison.Ordinal) && member is T)
-					return (T)member;
+				if(String.Equals(name, member.Name, StringComparison.Ordinal) && member is T t)
+					return t;
 
-			return default(T);
+			return default;
 		}
 
 		private IEnumerable<IPluginTypeInfo> GetGenericMembers()

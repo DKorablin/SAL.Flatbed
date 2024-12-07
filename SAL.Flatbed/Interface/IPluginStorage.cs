@@ -7,7 +7,6 @@ namespace SAL.Flatbed
 	/// <summary>Plugin storage interface which is responsible fo storing, loading and invoking plugin members</summary>
 	public interface IPluginStorage : IEnumerable<IPluginDescription>
 	{
-		#region Properties
 		/// <summary>Get plugin by identifier</summary>
 		/// <param name="pluginId">Plugin identifier</param>
 		/// <returns>Plugin interface that was fount by plugin ID</returns>
@@ -18,15 +17,12 @@ namespace SAL.Flatbed
 
 		/// <summary>The last plugin provider that was loaded from plugin source</summary>
 		IPluginProvider PluginProvider { get; }
-		#endregion Properties
-		#region Events
+
 		/// <summary>Event is called when all plugins was loaded</summary>
 		event EventHandler PluginsLoaded;
 
 		/// <summary>Event is called when plugin is unloaded</summary>
 		event EventHandler<PluginEventArgs> PluginUnloaded;
-		#endregion Events
-		#region Methods
 
 		/// <summary>Get plugin settings by base plugin interface</summary>
 		/// <param name="plugin">Base plugin interface which required to get all plugin settings</param>
@@ -81,6 +77,5 @@ namespace SAL.Flatbed
 		/// <summary>Set plugins provider</summary>
 		/// <param name="plugin">Plugin that is installed as a new plugin provider</param>
 		void SetPluginProvider(IPluginDescription plugin);
-		#endregion Methods
 	}
 }

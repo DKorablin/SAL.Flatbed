@@ -11,7 +11,6 @@ namespace SAL.Flatbed
 	public class PluginDescription : IPluginDescription
 	{
 		private IPluginTypeInfo _type;
-		#region Properties
 
 		/// <summary>Plugin identifier</summary>
 		/// <exception cref="ArgumentNullException">GuidAttribute not declared on assembly level</exception>
@@ -102,13 +101,11 @@ namespace SAL.Flatbed
 		/// <summary>Get all avalilable types to call from outside</summary>
 		public IPluginTypeInfo Type
 		{
-			get { return this._type ?? (this._type = new PluginTypeInfo(this.Instance.GetType(), this.Instance, null)); }
+			get => this._type ?? (this._type = new PluginTypeInfo(this.Instance.GetType(), this.Instance, null));
 		}
 
 		/// <summary>Assembly where plugin is hosted</summary>
-		private Assembly Assembly { get { return this.Instance.GetType().Assembly; } }
-		#endregion Properties
-		#region Methods
+		private Assembly Assembly { get => this.Instance.GetType().Assembly; }
 
 		/// <summary>Create instance of plugin description</summary>
 		/// <param name="instance">Interface for accessing plugin methods</param>
@@ -139,6 +136,5 @@ namespace SAL.Flatbed
 			Object[] attributes = this.Assembly.GetCustomAttributes(typeof(A), false);
 			return attributes.Length == 0 ? null : (A)attributes[0];
 		}
-		#endregion Methods
 	}
 }

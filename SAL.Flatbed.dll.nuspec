@@ -8,6 +8,7 @@
 		<readme>docs\README.md</readme>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<projectUrl>https://dkorablin.ru/project/Default.aspx?File=76</projectUrl>
+		<repository type="git" url="https://github.com/DKorablin/SAL.Flatbed" />
 		<description>Software abstraction layer core API. Base SAL Interface.</description>
 		<releaseNotes></releaseNotes>
 		<copyright>Danila Korablin</copyright>

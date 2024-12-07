@@ -9,7 +9,6 @@ namespace SAL.Flatbed
 	/// <summary>Basic plugin storage class</summary>
 	public class PluginStorage : IPluginStorage, IEnumerable<IPluginDescription>
 	{
-		#region Fields
 		private TraceSource _trace;
 
 		private readonly Object _settingsLock = new Object();
@@ -18,7 +17,6 @@ namespace SAL.Flatbed
 
 		private List<UnresolvedPlugin> _unresolvedPlugins;
 		private IPluginDescription _pluginProvider;
-		#endregion Fields
 
 		private IHost Host { get; }
 
@@ -39,13 +37,9 @@ namespace SAL.Flatbed
 		/// <returns>Found plugin description by plugin ID or null if plugin is not found or pluginId is null</returns>
 		public IPluginDescription this[String pluginId]
 		{
-			get
-			{
-				if(String.IsNullOrEmpty(pluginId))
-					return null;
-
-				return this.Plugins.TryGetValue(pluginId, out IPluginDescription result) ? result : null;
-			}
+			get => String.IsNullOrEmpty(pluginId)
+				? null
+				: this.Plugins.TryGetValue(pluginId, out IPluginDescription result) ? result : null;
 		}
 
 		/// <summary>Count of all loaded plugins</summary>
@@ -274,7 +268,7 @@ namespace SAL.Flatbed
 				this.Trace.TraceInformation("Unloading plugin ID = {0}", plugin.ID);
 
 				if(!this.Plugins.Remove(plugin.ID))
-					throw new ArgumentException($"Plugin {plugin.ID} not found in collection");
+					throw new ArgumentException($"Plugin {plugin.ID} not found in the collection");
 			}
 
 			return isDisconnected;

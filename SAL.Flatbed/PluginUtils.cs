@@ -30,10 +30,8 @@ namespace SAL.Flatbed
 		/// <returns><paramref name="targetType"/> implements the object required for <paramref name="sourceType"/></returns>
 		public static Boolean InstanceOf(Type sourceType, Type targetType)
 		{
-			if(sourceType == null)
-				throw new ArgumentNullException(nameof(sourceType));
-			if(targetType == null)
-				throw new ArgumentNullException(nameof(targetType));
+			_ = sourceType ?? throw new ArgumentNullException(nameof(sourceType));
+			_ = targetType ?? throw new ArgumentNullException(nameof(targetType));
 
 			if(sourceType.IsInterface)
 			{//Поиск по всем интерфейсам
