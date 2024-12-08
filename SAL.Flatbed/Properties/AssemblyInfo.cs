@@ -8,15 +8,17 @@ using System.Runtime.InteropServices;
 #if NETSTANDARD || NETCOREAPP
 [assembly: AssemblyMetadata("ProjectUrl", "https://dkorablin.ru/project/Default.aspx?File=76")]
 #else
+
 [assembly: AssemblyTitle("SAL.Flatbed")]
-[assembly: AssemblyProduct("Software Abstraction Layer")]
 [assembly: AssemblyDescription("Base SAL Interface")]
-[assembly: AssemblyCompany("Danila Korablin")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2009-2024")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else
 [assembly: AssemblyConfiguration("Release")]
 #endif
-//[assembly: AssemblyVersion("1.2.9.2")]
+[assembly: AssemblyCompany("Danila Korablin")]
+[assembly: AssemblyProduct("Software Abstraction Layer")]
+[assembly: AssemblyCopyright("Copyright © Danila Korablin 2009-2024")]
 #endif
+
+//[assembly: AssemblyVersion("1.2.9.2")]
