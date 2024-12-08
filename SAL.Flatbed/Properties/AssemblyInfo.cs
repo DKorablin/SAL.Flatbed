@@ -9,7 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("ProjectUrl", "https://dkorablin.ru/project/Default.aspx?File=76")]
 #else
 [assembly: AssemblyTitle("SAL.Flatbed")]
-[assembly: AssemblyProduct("Software Abstraction Layer Core")]
+[assembly: AssemblyProduct("Software Abstraction Layer")]
+[assembly: AssemblyDescription("Base SAL Interface")]
 [assembly: AssemblyCompany("Danila Korablin")]
 [assembly: AssemblyCopyright("Copyright © Danila Korablin 2009-2024")]
 #if DEBUG

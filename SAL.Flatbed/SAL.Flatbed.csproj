@@ -6,9 +6,10 @@
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<AssemblyTitle>SAL.Flatbed</AssemblyTitle>
 		<Company>Danila Korablin</Company>
-		<Product>Software Abstraction Layer Core</Product>
+		<Product>Software Abstraction Layer .NET Standard</Product>
+		<Description>Base SAL Interface</Description>
 		<Copyright>Copyright © Danila Korablin 2009-2024</Copyright>
-		<Configuration>Debug</Configuration>
+		<Configuration>Release</Configuration>
 		<AssemblyVersion>1.2.9.2</AssemblyVersion>
 		<FileVersion>1.2.9.2</FileVersion>
 		<Deterministic>false</Deterministic>
