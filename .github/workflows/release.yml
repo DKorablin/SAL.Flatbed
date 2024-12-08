@@ -50,7 +50,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        token: ${{secrets.SUBMODULE_TOKEN}}
         submodules: false
     - name: .NET Framework project exists
       id: net_framework
@@ -196,7 +195,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        token: ${{secrets.SUBMODULE_TOKEN}}
         submodules: false
         fetch-depth: 0 #Fetch all history for all tags and branches
     - name: Removing version tag
