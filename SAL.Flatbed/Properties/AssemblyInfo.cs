@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Danila Korablin 2009-2024")]
 #endif
 
-//[assembly: AssemblyVersion("1.2.9.2")]
+//[assembly: AssemblyVersion("1.2.10")]
