@@ -3,15 +3,8 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<OutputType>Library</OutputType>
 		<RootNamespace>SAL.Flatbed</RootNamespace>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-		<AssemblyTitle>SAL.Flatbed</AssemblyTitle>
-		<Company>Danila Korablin</Company>
-		<Product>Software Abstraction Layer .NET Standard</Product>
-		<Description>Base SAL Interface</Description>
-		<Copyright>Copyright © Danila Korablin 2009-2024</Copyright>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Configuration>Release</Configuration>
-		<AssemblyVersion>1.2.10.0</AssemblyVersion>
-		<FileVersion>1.2.10.0</FileVersion>
 		<Deterministic>false</Deterministic>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
