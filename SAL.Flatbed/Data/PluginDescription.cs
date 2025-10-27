@@ -83,8 +83,8 @@ namespace SAL.Flatbed
 		{
 			get
 			{
-				AssemblyCompanyAttribute attibute = this.GetAssemblyAttribute<AssemblyCompanyAttribute>();
-				return attibute?.Company;
+				AssemblyCompanyAttribute attribute = this.GetAssemblyAttribute<AssemblyCompanyAttribute>();
+				return attribute?.Company;
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace SAL.Flatbed
 			}
 		}
 
-		/// <summary>Get all avalilable types to call from outside</summary>
+		/// <summary>Get all available types to call from outside</summary>
 		public IPluginTypeInfo Type
 		{
 			get => this._type ?? (this._type = new PluginTypeInfo(this.Instance.GetType(), this.Instance, null));
@@ -130,7 +130,7 @@ namespace SAL.Flatbed
 
 		/// <summary>Get assembly instance attribute</summary>
 		/// <typeparam name="A">Attribute type to get</typeparam>
-		/// <returns>Forst found attribute or null</returns>
+		/// <returns>First found attribute or null</returns>
 		protected A GetAssemblyAttribute<A>() where A : Attribute
 		{
 			Object[] attributes = this.Assembly.GetCustomAttributes(typeof(A), false);

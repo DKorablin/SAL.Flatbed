@@ -6,7 +6,7 @@ namespace SAL.Flatbed
 	/// <summary>Description about the plugin member for call from outside</summary>
 	public interface IPluginMemberInfo
 	{
-		/// <summary>Member name</summary>
+		/// <summary>The member name</summary>
 		String Name { get; }
 
 		/// <summary>Full member name</summary>

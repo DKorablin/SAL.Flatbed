@@ -21,7 +21,7 @@ namespace SAL.Flatbed
 		/// <summary>Plugin class description</summary>
 		public String Description { get; }
 
-		/// <summary>Create instance of plugin class arrtibute suppying additional description</summary>
+		/// <summary>Create instance of plugin class attribute supplying additional description</summary>
 		/// <param name="id">Identifier</param>
 		/// <param name="version">Version</param>
 		/// <param name="name">Plugin class friendly name</param>

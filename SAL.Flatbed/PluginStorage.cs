@@ -7,7 +7,7 @@ using System.Reflection;
 namespace SAL.Flatbed
 {
 	/// <summary>Basic plugin storage class</summary>
-	public class PluginStorage : IPluginStorage, IEnumerable<IPluginDescription>
+	public class PluginStorage : IPluginStorage
 	{
 		private TraceSource _trace;
 
@@ -55,7 +55,7 @@ namespace SAL.Flatbed
 		public event EventHandler<PluginEventArgs> PluginUnloaded;
 
 		/// <summary>Create instance basic storage instance and specify host instance</summary>
-		/// <param name="host">Appplication host</param>
+		/// <param name="host">Application host</param>
 		/// <exception cref="ArgumentNullException"><paramref name="host"/> is null</exception>
 		public PluginStorage(IHost host)
 			=> this.Host = host ?? throw new ArgumentNullException(nameof(host), "Host can't be null");
@@ -101,7 +101,7 @@ namespace SAL.Flatbed
 			return null;
 		}
 
-		/// <summary>Event invoker after all plugins are loaded before host is completley loaded</summary>
+		/// <summary>Event invoker after all plugins are loaded before host is completely loaded</summary>
 		protected virtual void OnPluginsLoaded()
 		{
 			try
@@ -128,8 +128,8 @@ namespace SAL.Flatbed
 
 		/// <summary>Load plugin(s) from assembly</summary>
 		/// <param name="assembly">Assembly that will be searched for <see cref="IPlugin"/> instances</param>
-		/// <param name="source">Plugin loadeing source</param>
-		/// <param name="mode">Plugin loading mode. (In the runtime or before host is completley loaded)</param>
+		/// <param name="source">Plugin loading source</param>
+		/// <param name="mode">Plugin loading mode. (In the runtime or before host is completely loaded)</param>
 		/// <exception cref="ArgumentNullException"><paramref name="assembly"/> is null</exception>
 		/// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
 		public virtual void LoadPlugin(Assembly assembly, String source, ConnectMode mode)
@@ -140,32 +140,9 @@ namespace SAL.Flatbed
 
 			this.Trace.TraceInformation("Loading assembly {0} from {1} with mode {2}", assembly.FullName, source, mode);
 
-			//Byte[] raw = File.ReadAllBytes(filePath);
-			//Assembly pluginAssembly = Assembly.Load(raw);
-
 			foreach(Type pluginType in assembly.GetTypes())
 				if(PluginUtils.IsPluginType(pluginType))
 					this.LoadPluginType(pluginType, source, mode);
-		}
-
-		private Boolean WrapAndLoadPlugin(IPlugin plugin, String source, ConnectMode mode)
-		{
-			IPluginDescription pluginBase = new PluginDescription(plugin, source);
-			IPluginDescription pluginLoaded = this[pluginBase.ID];
-			if(pluginLoaded == null)//Добавление только уникальных плагинов
-			{
-				this.LoadPlugin(pluginBase, mode);
-				return true;
-			} else
-			{
-				Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Dublicate plugin found",
-					pluginBase.Name,
-					pluginBase.Source,
-					pluginLoaded.Name,
-					pluginLoaded.Source,
-					pluginBase.ID);
-				return false;
-			}
 		}
 
 		/// <summary>Add plugin to loaded plugins collection</summary>
@@ -223,10 +200,30 @@ namespace SAL.Flatbed
 			this.LoadPluginType(pluginType, source, mode);
 		}
 
+		private Boolean WrapAndLoadPlugin(IPlugin plugin, String source, ConnectMode mode)
+		{
+			IPluginDescription pluginBase = new PluginDescription(plugin, source);
+			IPluginDescription pluginLoaded = this[pluginBase.ID];
+			if(pluginLoaded == null)//Adding only unique plugins
+			{
+				this.LoadPlugin(pluginBase, mode);
+				return true;
+			} else
+			{
+				Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Duplicate plugin found",
+					pluginBase.Name,
+					pluginBase.Source,
+					pluginLoaded.Name,
+					pluginLoaded.Source,
+					pluginBase.ID);
+				return false;
+			}
+		}
+
 		/// <summary>Initialize all plugins. Invoked after specifying folder with assemblies</summary>
 		public virtual void InitializePlugins()
 		{
-			//Инициализация Kernel плагинов
+			//Initializing Kernel Plugins
 			foreach(IPluginDescription plugin in this.FindPluginType<IPluginKernel>())
 				try
 				{
@@ -235,10 +232,10 @@ namespace SAL.Flatbed
 				{
 					this.Trace.TraceData(TraceEventType.Error, 1, exc);
 				}
-			//TODO: Если необходимо передать инициализацию плагинов ядру, необходимо расширить (добавить IPluginKernelEx) интерфейс плагина IPluginKernel, в котором будут инициализироваться все плагины
+			//TODO: If you want to delegate plugin initialization to the kernel, you need to extend (add IPluginKernelEx) the IPluginKernel plugin interface, in which all plugins will be initialized
 			// if(this.Kernel is IPluginKernelEx) if(!((IPluginKernelEx)this.Kernel).InitializeEx()) Application.Exit(); else foreach(var plugin in this.Plugins)...
 
-			//Инициализация всех плагинов за исключением Kernel плагинов
+			//Initializing all plugins except Kernel plugins
 			foreach(IPluginDescription plugin in this.Plugins.Values)
 				if(!plugin.Type.InstanceOf<IPluginKernel>())
 					try
@@ -282,20 +279,20 @@ namespace SAL.Flatbed
 		/// <param name="plugin">Plugin that is installed as a settings provider</param>
 		/// <exception cref="ArgumentNullException">Plugin can't be null</exception>
 		/// <exception cref="ArgumentException">Removed plugin can't be set as a settings provider</exception>
-		public void SetSetingsProvider(IPluginDescription plugin)
+		public void SetSettingsProvider(IPluginDescription plugin)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin), "Plugin is null");
 			if(plugin.Instance == null)
 				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
 
-			//Установка родительского загрузчика
+			//Installing the parent bootloader
 			this.Trace.TraceInformation("Set Settings Provider ID = {0}", plugin.ID);
 
 			this._settingsProvider.Insert(0, (ISettingsPluginProvider)plugin.Instance);
 		}
 
 		/// <summary>Get plugin settings provider</summary>
-		/// <param name="plugin">Plugin for wich get plugin settings provider</param>
+		/// <param name="plugin">Plugin for which get plugin settings provider</param>
 		/// <exception cref="ArgumentException"><c>plugin</c> does not inherits <c>IPluginSettings</c></exception>
 		/// <exception cref="ArgumentNullException"><c>((IPluginSettings)plugin).Settings</c> is null</exception>
 		/// <returns>Settings provider fixed for this plugin</returns>
@@ -307,14 +304,14 @@ namespace SAL.Flatbed
 				lock(this._settingsLock)
 					if(!this._pluginSettings.TryGetValue(plugin, out result))
 					{
-						if(!(plugin is IPluginSettings settings))
+						if(!(plugin is IPluginSettings))
 							throw new ArgumentException("Plugin does not support customization");
-						/*if(settings.Settings == null)//Нельзя проверять пропертю, иначе будет StackOverflowException. Т.к. Settings ещё не созданы
+						/*if(settings.Settings == null)//You can't check the property, otherwise you'll get a StackOverflowException. Because the Settings haven't been created yet.
 							throw new ArgumentNullException("Plugin.Settings");*/
 
 						foreach(ISettingsPluginProvider pluginProvider in this._settingsProvider)
 						{
-							if(plugin != pluginProvider)//Чтобы не выбрать самого себя в качестве получения настроек
+							if(plugin != pluginProvider)//To avoid selecting yourself as the recipient of settings
 								result = pluginProvider.GetSettingsProvider(plugin);
 							if(result != null)
 							{
@@ -336,7 +333,7 @@ namespace SAL.Flatbed
 			if(plugin.Instance == null)
 				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
 
-			//Установка родительского загрузчика
+			//Installing the parent bootloader
 			this.Trace.TraceInformation("Set Plugin Provider ID = {0}", plugin.ID);
 
 			if(this._pluginProvider != null)
@@ -374,7 +371,7 @@ namespace SAL.Flatbed
 					if(uPlugin != null && this.WrapAndLoadPlugin(uPlugin, unresolved.Source, unresolved.Mode))
 					{
 						this._unresolvedPlugins.RemoveAt(loop);
-						loop = this._unresolvedPlugins.Count;//Начинаем цикл сначала, ибо элемент мог быть уже подгружен
+						loop = this._unresolvedPlugins.Count;//We start the cycle from the beginning, because the element might have already been loaded.
 					}
 				}
 			}
@@ -401,10 +398,10 @@ namespace SAL.Flatbed
 			return result;
 		}
 
-		/// <summary>Try to resolve all dependecies and create plugin instance</summary>
+		/// <summary>Try to resolve all dependencies and create plugin instance</summary>
 		/// <param name="pluginType">Plugin type that resolves <see cref="IPlugin"/> interface</param>
 		/// <param name="ctor">Type constructor that need to be resolved</param>
-		/// <returns>Createted plugin instance</returns>
+		/// <returns>Created plugin instance</returns>
 		private IPlugin ResolveAndCreate(Type pluginType, ConstructorInfo ctor)
 		{
 			ParameterInfo[] parameterTypes = ctor.GetParameters();
@@ -418,7 +415,7 @@ namespace SAL.Flatbed
 					args[loop] = this.Host;
 				else
 				{
-					if(parameterType == typeof(IEnumerable<>))//TODO: Необходимо откладывать на постобработку
+					if(parameterType == typeof(IEnumerable<>))//TODO: It is necessary to postpone it for post-processing
 						parameterType = parameterType.GetGenericArguments()[0];
 
 					List<Object> instances = new List<Object>();
@@ -434,7 +431,7 @@ namespace SAL.Flatbed
 						this.Trace.TraceInformation("Plugin {0}.ctor[{1}](...{2}...) unresolved reference", pluginType, ctor, parameter.ParameterType);
 						return null;
 					default:
-						//TODO: Плагины с входящими массивами необходимо инициализировать после инициализации, но до загрузки
+						//TODO: Plugins with input arrays must be initialized after initialization but before loading.
 						if(parameter.ParameterType == typeof(IEnumerable<>))
 							args[loop] = instances.ToArray();
 						break;

@@ -19,26 +19,28 @@ namespace SAL.Flatbed
 
 		/// <summary>Attach method reference to plugin event handler</summary>
 		/// <param name="handler">Method reference that will be invoked when event is called</param>
-		/// <exception cref="ArgumentNullException">Handler or target is null</exception>
+		/// <exception cref="ArgumentNullException">The handler is null.</exception>
+		/// <exception cref="InvalidOperationException">The target is null.</exception>
 		public void AddEventHandler(EventHandler<DataEventArgs> handler)
 		{
 			_ = handler ?? throw new ArgumentNullException(nameof(handler));
 
 			Object target = base.GetTarget()
-				?? throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
+				?? throw new InvalidOperationException($"Container for event {this.Name} is null");
 
 			this.Member.AddEventHandler(target, handler);
 		}
 
 		/// <summary>Detach method reference from plugin event handler</summary>
 		/// <param name="handler">Method reference to detach from plugin event</param>
-		/// <exception cref="ArgumentNullException">handler or target is null</exception>
+		/// <exception cref="ArgumentNullException">The handler is null.</exception>
+		/// <exception cref="InvalidOperationException">The target is null.</exception>
 		public void RemoveEventHandler(EventHandler<DataEventArgs> handler)
 		{
 			_ = handler ?? throw new ArgumentNullException(nameof(handler));
 
 			Object target = base.GetTarget()
-				?? throw new ArgumentNullException(nameof(target), $"Container for event {this.Name} is null");
+				?? throw new InvalidOperationException($"Container for event {this.Name} is null");
 
 			this.Member.RemoveEventHandler(target, handler);
 		}

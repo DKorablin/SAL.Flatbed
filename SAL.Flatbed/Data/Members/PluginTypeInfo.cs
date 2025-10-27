@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -9,7 +8,7 @@ namespace SAL.Flatbed
 	public class PluginTypeInfo : PluginMemberInfo, IPluginTypeInfo
 	{
 		private IPluginMemberInfo[] _members;
-		private IPluginTypeInfo[] _genericMemebers;
+		private IPluginTypeInfo[] _genericMembers;
 
 		/// <summary>Type is Value type</summary>
 		public Boolean IsValueType
@@ -36,7 +35,7 @@ namespace SAL.Flatbed
 		}
 
 		private Boolean IsNativeType
-		{//TODO: Придумать алгоритм определения BCL сборок
+		{//TODO: Come up with an algorithm for determining BCL assemblies
 			get => base.Member.Module.Assembly.GlobalAssemblyCache;//return base.Member.Module.Assembly.GetName().Name == "mscorlib";
 		}
 
@@ -49,7 +48,7 @@ namespace SAL.Flatbed
 		/// <summary>Type Generic array</summary>
 		public IEnumerable<IPluginTypeInfo> GenericMembers
 		{
-			get => this._genericMemebers ?? (this._genericMemebers = new List<IPluginTypeInfo>(this.GetGenericMembers()).ToArray());
+			get => this._genericMembers ?? (this._genericMembers = new List<IPluginTypeInfo>(this.GetGenericMembers()).ToArray());
 		}
 
 		/// <summary>Create plugin type description which describes base types</summary>
@@ -91,7 +90,7 @@ namespace SAL.Flatbed
 				Type type = base.ReflectedType;
 
 				foreach(Type member in type.GetGenericArguments())
-					yield return new PluginTypeInfo(member, null, this);//TODO: Добавлен родитель инстанса
+					yield return new PluginTypeInfo(member, null, this);//TODO: Added instance parent
 			}
 		}
 

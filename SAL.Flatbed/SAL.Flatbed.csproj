@@ -1,16 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>net20;netstandard2.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<RootNamespace>SAL.Flatbed</RootNamespace>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Configuration>Release</Configuration>
-		<Deterministic>false</Deterministic>
+		<Deterministic>False</Deterministic>
+		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<OutputPath>..\..\bin\</OutputPath>
-		<DocumentationFile>..\..\bin\SAL.Flatbed.xml</DocumentationFile>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<Optimize>true</Optimize>
+		<PublishSingleFile>true</PublishSingleFile>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 	</PropertyGroup>
+
+	<!--nuspec-->
+	<PropertyGroup>
+		<PackageId>SAL.Flatbed</PackageId>
+		<Version>$(Version)</Version>
+		<Title>Software abstraction layer core API</Title>
+		<Description>Software abstraction layer core API. Base SAL Interfaces.</Description>
+		<Authors>Danila Korablin</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
+		<PackageIcon>docs\SAL.100.png</PackageIcon>
+		<RepositoryUrl>https://github.com/DKorablin/SAL.Flatbed</RepositoryUrl>
+		<PackageTags>SAL, Plugins</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\docs" />
+		<None Include="..\Images.Shared\SAL.100.png" Pack="true" PackagePath="\docs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' != 'net20'">
+		<AssemblyAttributes Include="AssemblyMetadata">
+			<_Parameter1>ProjectUrl</_Parameter1>
+			<_Parameter2>https://github.com/DKorablin/SAL.Flatbed</_Parameter2>
+		</AssemblyAttributes>
+	</ItemGroup>
 </Project>

@@ -50,7 +50,7 @@ namespace SAL.Flatbed
 		{
 			Object target = base.GetTarget();
 			if(target == null)
-				return null;//TODO: Добавлено из-за генериков. Стек: PluginTypeInfo.GetGenericMembers -> PluginMethodInfo.Invoke
+				return null;//TODO: Added due to generics. Stack: PluginTypeInfo.GetGenericMembers -> PluginMethodInfo.Invoke
 			else
 			{
 				try

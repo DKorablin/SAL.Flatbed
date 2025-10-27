@@ -19,7 +19,7 @@ namespace SAL.Flatbed
 				if(this._storage == null)
 				{
 					this._storage = new PluginStorage(this);
-					AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
+					AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
 				}
 				return this._storage;
 			}

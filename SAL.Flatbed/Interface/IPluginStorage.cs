@@ -39,7 +39,7 @@ namespace SAL.Flatbed
 		void LoadPlugin(Assembly assembly, String source, ConnectMode mode);
 
 		/// <summary>Add plugin to collection from assembly, using exact type</summary>
-		/// <param name="assembly">Assemby that hosts plugin interface</param>
+		/// <param name="assembly">Assembly that hosts plugin interface</param>
 		/// <param name="type">Type that resolves interface <see cref="IPlugin"/></param>
 		/// <param name="source">Source where plugin was loaded</param>
 		/// <param name="mode">How plugin was loaded</param>
@@ -55,7 +55,7 @@ namespace SAL.Flatbed
 		/// <param name="plugin">Base plugin interface that need to be unloaded from collection</param>
 		Boolean UnloadPlugin(IPluginDescription plugin);
 
-		/// <summary>Initialize all plugins after loadeing</summary>
+		/// <summary>Initialize all plugins after loading</summary>
 		void InitializePlugins();
 
 		/// <summary>Fond all plugins with specific typed</summary>
@@ -65,14 +65,14 @@ namespace SAL.Flatbed
 
 		/// <summary>Send message to plugin</summary>
 		/// <param name="pluginId">Plugin identifier</param>
-		/// <param name="message">message wich transfer to plugin</param>
+		/// <param name="message">message which transfer to plugin</param>
 		/// <param name="args">Arguments transferred with message</param>
-		/// <returns>Result when plugin recieve and process this message</returns>
+		/// <returns>Result when plugin receive and process this message</returns>
 		Object SendMessage(String pluginId, String message, params Object[] args);
 
 		/// <summary>Set settings provider</summary>
 		/// <param name="plugin">Base plugin interface that resolves base interface as settings provider</param>
-		void SetSetingsProvider(IPluginDescription plugin);
+		void SetSettingsProvider(IPluginDescription plugin);
 
 		/// <summary>Set plugins provider</summary>
 		/// <param name="plugin">Plugin that is installed as a new plugin provider</param>

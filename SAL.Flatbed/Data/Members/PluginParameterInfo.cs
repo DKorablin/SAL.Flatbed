@@ -41,9 +41,7 @@ namespace SAL.Flatbed
 
 			result.AddRange(base.GetDefaultValues());
 
-			return result.Count == 0
-				? null
-				: result.ToArray();
+			return result.ToArray();
 		}
 	}
 }

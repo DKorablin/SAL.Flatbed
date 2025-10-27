@@ -6,7 +6,7 @@ namespace SAL.Flatbed
 	public enum DisconnectMode
 	{
 		/// <summary>The add-in was unloaded by unknown reason</summary>
-		/// <remarks>If this event recieved it must be closed without any answers</remarks>
+		/// <remarks>If this event received it must be closed without any answers</remarks>
 		Unknown = 0,
 		/// <summary>The add-in was unloaded with OS</summary>
 		HostShutdown = 1,

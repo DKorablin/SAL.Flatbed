@@ -6,7 +6,7 @@ namespace SAL.Flatbed
 	/// <summary>Description of plugin method</summary>
 	public interface IPluginMethodInfo : IPluginMemberInfo
 	{
-		/// <summary>Arguments count</summary>
+		/// <summary>The count of arguments required to invoke the method.</summary>
 		Int32 Count { get; }
 
 		/// <summary>Return type description</summary>

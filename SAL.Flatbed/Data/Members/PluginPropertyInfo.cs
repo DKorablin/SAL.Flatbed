@@ -47,11 +47,12 @@ namespace SAL.Flatbed
 		/// <summary>Get property value</summary>
 		/// <param name="parameters">Array of input parameters</param>
 		/// <returns>Property value</returns>
+		/// <exception cref="InvalidOperationException">The target is null.</exception>
 		public Object Get(params Object[] parameters)
 		{
 			PropertyInfo info = this.Property;
 			Object target = base.GetTarget()
-				?? throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
+				?? throw new InvalidOperationException($"Container for property {this.Name} is null");
 
 			return info.GetValue(target, parameters);//Don't forget about CanRead
 		}
@@ -59,19 +60,20 @@ namespace SAL.Flatbed
 		/// <summary>Set property value</summary>
 		/// <param name="value">Value to write</param>
 		/// <param name="parameters">Array on input indexes</param>
+		/// <exception cref="InvalidOperationException">The target is null.</exception>"
 		public void Set(Object value, params Object[] parameters)
 		{
 			PropertyInfo info = this.Property;
 			Object target = base.GetTarget()
-				?? throw new ArgumentNullException(nameof(target), $"Container for property {this.Name} is null");
+				?? throw new InvalidOperationException($"Container for property {this.Name} is null");
 
 			info.SetValue(target, value, null);//Don't forget about CanWrite
 		}
 
-		/*/// <summary>Получить публичный элемент плагина по наименованию свойства</summary>
-		/// <typeparam name="T">Какого типа должен быть элемент</typeparam>
-		/// <param name="name">Наименование элемента в плагине</param>
-		/// <returns>Информация о публичном элементе плагина</returns>
+		/*/// <summary>Get a public plugin element by property name</summary>
+		/// <typeparam name="T">What type should the element be?</typeparam>
+		/// <param name="name">The name of the element in the plugin</param>
+		/// <returns>Information about the public plugin element</returns>
 		public T GetMember<T>(String name) where T : IPluginMemberInfo
 		{
 			if(String.IsNullOrEmpty(name))
@@ -84,8 +86,8 @@ namespace SAL.Flatbed
 			return default(T);
 		}
 
-		/// <summary>Получить публичные методы объекта</summary>
-		/// <returns>Информация по публичным объектам плагина</returns>
+		/// <summary>Get public methods of an object</summary>
+		/// <returns>Information on the plugin's public objects</returns>
 		public IEnumerable<IPluginMemberInfo> GetMembers()
 		{
 			PropertyInfo info = this._property;

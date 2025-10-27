@@ -5,14 +5,20 @@ VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SAL.Flatbed", "SAL.Flatbed\SAL.Flatbed.csproj", "{AE0684D6-BBE5-4F24-94CE-9B46813136EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAL.Flatbed35", "SAL.Flatbed\SAL.Flatbed35.csproj", "{1FAFE554-DF19-4AB5-A706-E86A4027B016}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F6EFC15-F073-4D9C-803B-AB2F555D0D94}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
 		.github\dependabot.yml = .github\dependabot.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
-		SAL.Flatbed.dll.nuspec = SAL.Flatbed.dll.nuspec
 		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
 EndProject
@@ -26,13 +32,12 @@ Global
 		{AE0684D6-BBE5-4F24-94CE-9B46813136EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE0684D6-BBE5-4F24-94CE-9B46813136EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE0684D6-BBE5-4F24-94CE-9B46813136EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FAFE554-DF19-4AB5-A706-E86A4027B016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FAFE554-DF19-4AB5-A706-E86A4027B016}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FAFE554-DF19-4AB5-A706-E86A4027B016}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FAFE554-DF19-4AB5-A706-E86A4027B016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {5F6EFC15-F073-4D9C-803B-AB2F555D0D94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0971B03D-F9EA-4EB3-86F0-F148AA271046}

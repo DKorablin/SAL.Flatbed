@@ -40,15 +40,15 @@ namespace SAL.Flatbed
 		/// <param name="value">Stream to big value</param>
 		void SaveAssemblyBlob(String key, Stream value);
 
-		/// <summary>Delete plugin parameter by key value from storage</summary>
-		/// <param name="key">Plugin settings key to remove</param>
-		/// <returns>Deleting plugin parameter succeded</returns>
-		Boolean RemoveAssemblyParameter(String key);
-
 		/// <summary>Remove big plugin parameter value by key</summary>
 		/// <param name="key">Plugin settings key to remove</param>
-		/// <returns>Deleting big plugin parameter succeded</returns>
+		/// <returns>Deleting big plugin parameter succeeded</returns>
 		Boolean RemoveAssemblyBlob(String key);
+
+		/// <summary>Delete plugin parameter by key value from storage</summary>
+		/// <param name="key">Plugin settings key to remove</param>
+		/// <returns>Deleting plugin parameter succeeded</returns>
+		Boolean RemoveAssemblyParameter(String key);
 
 		/// <summary>Removes all plugin parameters from storage</summary>
 		void RemoveAssemblyParameter();

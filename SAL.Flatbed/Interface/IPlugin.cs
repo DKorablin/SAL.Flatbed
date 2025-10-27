@@ -15,7 +15,7 @@ namespace SAL.Flatbed
 
 		/// <summary>Invoked when module will be disconnected</summary>
 		/// <param name="mode">Mode how plugin is disconnected</param>
-		/// <returns>Plugin is disconnected succesfully</returns>
+		/// <returns>Plugin is disconnected successfully</returns>
 		Boolean OnDisconnection(DisconnectMode mode);
 	}
 }

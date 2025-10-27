@@ -45,10 +45,12 @@ namespace SAL.Flatbed
 		/// <param name="member">Member information reflection</param>
 		/// <param name="target">Object where member declared</param>
 		/// <param name="parent">Parent object instance information</param>
+		/// <exception cref="ArgumentNullException">The member is null.</exception>
+		/// <exception cref="ArgumentException">The target and parent are both null.</exception>
 		public PluginMemberInfo(MemberInfo member, Object target, PluginMemberInfo parent)
 		{
 			if(target == null && parent == null)
-				throw new ArgumentNullException(nameof(target) + " || " + nameof(parent), "target or parent is required for invocation process");
+				throw new ArgumentException("target or parent is required for invocation process");
 
 			this.Member = member ?? throw new ArgumentNullException(nameof(member));
 			this.Target = target;
@@ -82,7 +84,7 @@ namespace SAL.Flatbed
 			if(this.Target != null)
 				return this.Target;
 			else if(this.Parent == null)
-				throw new InvalidOperationException("Istance is not specified");
+				throw new InvalidOperationException("Instance is not specified");
 
 			switch(this.Parent.MemberType)
 			{

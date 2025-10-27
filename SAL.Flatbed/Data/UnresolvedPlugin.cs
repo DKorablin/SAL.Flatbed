@@ -2,9 +2,9 @@
 
 namespace SAL.Flatbed
 {
-	/// <summary>Description of unresolverd plugin</summary>
-	/// <remarks>If pluigin .ctor reference are not resolved, then plugin will be skipped</remarks>
-	internal class UnresolvedPlugin
+	/// <summary>Description of unresolved plugin</summary>
+	/// <remarks>If plugin .ctor reference are not resolved, then plugin will be skipped</remarks>
+	public class UnresolvedPlugin
 	{
 		/// <summary>Type of plugin</summary>
 		public Type PluginType { get; }
