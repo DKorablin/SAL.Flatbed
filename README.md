@@ -1,4 +1,5 @@
 # SAL (Software Abstraction Layer)
+[![Auto build](https://github.com/DKorablin/SAL.Flatbed/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/SAL.Flatbed/releases/latest)
 
 ## Overview
 
