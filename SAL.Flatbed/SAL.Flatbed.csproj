@@ -27,7 +27,7 @@
 		<PackageReadmeFile>docs\README.md</PackageReadmeFile>
 		<PackageIcon>docs\SAL.100.png</PackageIcon>
 		<RepositoryUrl>https://github.com/DKorablin/SAL.Flatbed</RepositoryUrl>
-		<PackageTags>SAL, Plugins</PackageTags>
+		<PackageTags>SAL;plugins;plugin-architecture;modularity;extensibility;plugin-framework;plugin-system;plugin-loader</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -311,7 +311,7 @@ namespace SAL.Flatbed
 					{
 						if(!(plugin is IPluginSettings))
 							throw new ArgumentException("Plugin does not support customization");
-						/*if(settings.Settings == null)//We can't check the property, otherwise we'll get the StackOverflowException. Because the Settings haven't been created yet.
+						/*if(settings.Settings == null)//We can't check this property, otherwise we'll get the StackOverflowException. Because the Settings haven't been created yet.
 							throw new ArgumentNullException("Plugin.Settings");*/
 
 						foreach(ISettingsPluginProvider pluginProvider in this._settingsProvider)
