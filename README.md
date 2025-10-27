@@ -71,7 +71,7 @@ The architecture is built around plugins implementing the `IPlugin` interface, w
    - Loads and configures settings providers (`ISettingsProvider`)
    - Initializes plugin providers (`IPluginProvider`)
 
-2. **Kernel Plugin Detection**
+2. **Kernel Plugin Detection  (optional)**
    - Identifies and initializes kernel plugins (`IPluginKernel`)
    - Establishes BLL/DAL foundations
 
@@ -80,6 +80,23 @@ The architecture is built around plugins implementing the `IPlugin` interface, w
    - Establishes inter-plugin communications
 
 ### Plugin Integration Examples
+
+#### Basic Plugin Structure
+```csharp
+public class MyPlugin : IPlugin
+{
+    private readonly IHost _host;
+
+    public MyPlugin(IHost host)
+        => this._host = host;//Optional constructor
+
+    public Boolean OnConnection(ConnectMode mode)
+        => return true;
+
+    public Boolean OnDisconnection(DisconnectMode mode)
+        => return true;
+}
+```
 
 #### Settings Management
 
