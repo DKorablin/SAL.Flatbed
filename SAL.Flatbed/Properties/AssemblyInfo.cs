@@ -5,5 +5,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Danila Korablin 2009-2025")]
 [assembly: AssemblyDescription("Software Abstraction Layer base interfaces.")]
 [assembly: System.CLSCompliant(true)]
-
-//[assembly: AssemblyVersion("1.2.10")]

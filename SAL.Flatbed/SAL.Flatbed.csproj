@@ -35,7 +35,7 @@
 		<None Include="..\Images.Shared\SAL.100.png" Pack="true" PackagePath="\docs" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'net20'">
+	<ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
 		<AssemblyAttributes Include="AssemblyMetadata">
 			<_Parameter1>ProjectUrl</_Parameter1>
 			<_Parameter2>https://github.com/DKorablin/SAL.Flatbed</_Parameter2>

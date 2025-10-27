@@ -103,28 +103,12 @@ namespace SAL.Flatbed
 
 		/// <summary>Event invoker after all plugins are loaded before host is completely loaded</summary>
 		protected virtual void OnPluginsLoaded()
-		{
-			try
-			{
-				this.PluginsLoaded?.Invoke(this, EventArgs.Empty);
-			} catch(Exception exc)
-			{
-				this.Trace.TraceData(TraceEventType.Error, 1, exc);
-			}
-		}
+			=> this.SafeInvoke(this.PluginsLoaded, this, EventArgs.Empty);
 
 		/// <summary>Event invoker after plugin is unloaded from host</summary>
 		/// <param name="plugin">Plugin that was unloaded</param>
 		protected virtual void OnPluginUnloaded(IPluginDescription plugin)
-		{
-			try
-			{
-				this.PluginUnloaded?.Invoke(this, new PluginEventArgs(plugin));
-			} catch(Exception exc)
-			{
-				this.Trace.TraceData(TraceEventType.Error, 1, exc);
-			}
-		}
+			=> this.SafeInvoke(this.PluginUnloaded, this, new PluginEventArgs(plugin));
 
 		/// <summary>Load plugin(s) from assembly</summary>
 		/// <param name="assembly">Assembly that will be searched for <see cref="IPlugin"/> instances</param>
@@ -274,6 +258,10 @@ namespace SAL.Flatbed
 		/// <summary>Remove all plugins from collection</summary>
 		public virtual void RemovePlugins()
 			=> this.Plugins.Clear();
+
+		/// <inheritdoc/>
+		void IPluginStorage.SetSetingsProvider(IPluginDescription plugin)
+			=> this.SetSettingsProvider(plugin);
 
 		/// <summary>Set new settings provider</summary>
 		/// <param name="plugin">Plugin that is installed as a settings provider</param>
@@ -440,6 +428,21 @@ namespace SAL.Flatbed
 			}
 
 			return (IPlugin)ctor.Invoke(args);
+		}
+
+		private void SafeInvoke(Delegate eventDelegate, params Object[] args)
+		{
+			if(eventDelegate == null)
+				return;
+
+			foreach(Delegate subscriber in eventDelegate.GetInvocationList())
+				try
+				{
+					subscriber.DynamicInvoke(args);
+				} catch(Exception exc)
+				{
+					this.Trace.TraceData(TraceEventType.Error, 1, exc);
+				}
 		}
 
 		private static TraceSource CreateTraceSource(String name)

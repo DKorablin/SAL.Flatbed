@@ -72,6 +72,11 @@ namespace SAL.Flatbed
 
 		/// <summary>Set settings provider</summary>
 		/// <param name="plugin">Base plugin interface that resolves base interface as settings provider</param>
+		[Obsolete("Use SetSettingsProvider method instead")]
+		void SetSetingsProvider(IPluginDescription plugin);
+
+		/// <summary>Set settings provider</summary>
+		/// <param name="plugin">Base plugin interface that resolves base interface as settings provider</param>
 		void SetSettingsProvider(IPluginDescription plugin);
 
 		/// <summary>Set plugins provider</summary>

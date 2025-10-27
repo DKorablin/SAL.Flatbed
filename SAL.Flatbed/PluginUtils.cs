@@ -34,8 +34,8 @@ namespace SAL.Flatbed
 
 			if(sourceType.IsInterface)
 			{//Search all interfaces
-				foreach(Type iface in targetType.GetInterfaces())
-					if(iface.Equals(sourceType))
+				foreach(Type item in targetType.GetInterfaces())
+					if(item.Equals(sourceType))
 						return true;
 			} else
 			{//Search by parents
