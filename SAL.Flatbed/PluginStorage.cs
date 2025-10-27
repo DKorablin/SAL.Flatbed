@@ -9,8 +9,9 @@ namespace SAL.Flatbed
 	/// <summary>Basic plugin storage class</summary>
 	public class PluginStorage : IPluginStorage
 	{
-		private TraceSource _trace;
+		private volatile TraceSource _trace;
 
+		private readonly Object _sync = new Object();
 		private readonly Object _settingsLock = new Object();
 		private readonly Dictionary<IPlugin, ISettingsProvider> _pluginSettings = new Dictionary<IPlugin, ISettingsProvider>();
 		private readonly List<ISettingsPluginProvider> _settingsProvider = new List<ISettingsPluginProvider>();
@@ -58,7 +59,7 @@ namespace SAL.Flatbed
 		/// <param name="host">Application host</param>
 		/// <exception cref="ArgumentNullException"><paramref name="host"/> is null</exception>
 		public PluginStorage(IHost host)
-			=> this.Host = host ?? throw new ArgumentNullException(nameof(host), "Host can't be null");
+			=> this.Host = host ?? throw new ArgumentNullException(nameof(host));
 
 		/// <summary>Search for plugins with specific type</summary>
 		/// <typeparam name="T">Type of plugin to search</typeparam>
@@ -82,6 +83,7 @@ namespace SAL.Flatbed
 		/// <param name="message">Public method name in the plugin</param>
 		/// <param name="args">Method arguments</param>
 		/// <returns>Result returned from method or null if method returns void or null</returns>
+		/// <exception cref="ArgumentException">Plugin or member not found</exception>
 		public virtual Object SendMessage(String pluginId, String message, params Object[] args)
 		{
 			this.Trace.TraceInformation("Sending message {0} to plugin ID = {1}", message, pluginId);
@@ -89,16 +91,27 @@ namespace SAL.Flatbed
 			IPluginDescription plugin = this[pluginId];
 			if(plugin == null)
 			{
-				this.Trace.TraceEvent(TraceEventType.Warning, 1, "Plugin {0} not found", pluginId);
-				return null;
+				var ex = new ArgumentException($"Plugin {pluginId} not found", nameof(pluginId));
+				this.Trace.TraceEvent(TraceEventType.Warning, 1, ex.Message);
+				throw ex;
 			}
 
 			IPluginMethodInfo member = plugin.Type.GetMember<IPluginMethodInfo>(message);
-			if(member != null)
-				return member.Invoke(args);
+			if(member == null)
+			{
+				var ex = new ArgumentException($"Method {message} not found in plugin {pluginId}", nameof(message));
+				this.Trace.TraceEvent(TraceEventType.Warning, 1, ex.Message);
+				throw ex;
+			}
 
-			this.Trace.TraceEvent(TraceEventType.Warning, 1, "Plugin {0} loaded without instance", pluginId);
-			return null;
+			try
+			{
+				return member.Invoke(args);
+			} catch(Exception ex)
+			{
+				this.Trace.TraceEvent(TraceEventType.Error, 1, "Error invoking {0} on plugin {1}: {2}", message, pluginId, ex);
+				throw;
+			}
 		}
 
 		/// <summary>Event invoker after all plugins are loaded before host is completely loaded</summary>
@@ -137,12 +150,16 @@ namespace SAL.Flatbed
 		public virtual void LoadPlugin(IPluginDescription plugin, ConnectMode mode)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin));
-			if(this[plugin.ID] != null)
-				throw new ArgumentException($"Plugin {plugin.ID} already loaded", nameof(plugin));
 
-			this.Trace.TraceInformation("Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
+			lock(_sync)
+			{
+				if(this[plugin.ID] != null)
+					throw new ArgumentException($"Plugin {plugin.ID} already loaded", nameof(plugin));
 
-			this.Plugins.Add(plugin.ID, plugin);
+				this.Trace.TraceInformation("Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
+
+				this.Plugins.Add(plugin.ID, plugin);
+			}
 
 			if(plugin.Instance != null)
 			{
@@ -175,7 +192,7 @@ namespace SAL.Flatbed
 
 			Type pluginType = assembly.GetType(type)
 				?? throw new ArgumentNullException(type, $"Type not found in the assembly '{source}'");
-				
+
 			if(!PluginUtils.IsPluginType(pluginType))
 				throw new ArgumentException(pluginType.FullName, $"Assembly {assembly.FullName}. Type must be public class and inherit interface {PluginConstant.PluginInterface}");
 
@@ -294,7 +311,7 @@ namespace SAL.Flatbed
 					{
 						if(!(plugin is IPluginSettings))
 							throw new ArgumentException("Plugin does not support customization");
-						/*if(settings.Settings == null)//You can't check the property, otherwise you'll get a StackOverflowException. Because the Settings haven't been created yet.
+						/*if(settings.Settings == null)//We can't check the property, otherwise we'll get the StackOverflowException. Because the Settings haven't been created yet.
 							throw new ArgumentNullException("Plugin.Settings");*/
 
 						foreach(ISettingsPluginProvider pluginProvider in this._settingsProvider)
