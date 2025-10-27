@@ -19,12 +19,12 @@ SAL is a plugin-based architecture for building modular .NET applications, origi
 
 - **Flexible UI Integration**
   - Multiple interface paradigms (SDI/MDI/Dialog)
-  - Support for WinForms UserControls
+  - Support for WinForms UserControls (including WPF)
   - Visual Studio IDE integration capabilities
   - Automatic UI state persistence
 
 - **Cross-Platform Architecture**
-  - Core functionality usable in WinForms, ASP.NET, and Windows Services
+  - Core functionality usable in WinForms, WPF, ASP.NET, Windows Services etc.
   - Shared plugin ecosystem across different application types
   - Support for system services like autorun, single instance, timers
 
@@ -33,7 +33,17 @@ SAL is a plugin-based architecture for building modular .NET applications, origi
 ### Component Hierarchy
 
 1. **Application Layer**
-   - Supports multiple hosts: MDI, Dialog-based, EnvDTE, Windows Service, ASP.NET
+   - Supports multiple hosts:
+      - MDI Applications
+        1. [Flatbed.MDI](https://dkorablin.github.io/Flatbed-MDI/)
+        2. [Flatbed.MDI (Avalon)](https://dkorablin.github.io/Flatbed-MDI-Avalon/)
+      - Dialog-based Applications
+        1. [Flatbed.Dialog](https://dkorablin.github.io/Flatbed-Dialog/)
+        2. [Flatbed.Dialog (Lite)](https://dkorablin.github.io/Flatbed-Dialog-Lite/)
+      - Visual Studio Integration (EnvDTE)
+      - Windows Services
+        1. [Flatbed.Service](https://dkorablin.github.io/Flatbed-WorkerService/)
+      - ASP.NET Applications
 
 2. **SAL Host**
    - Manages plugin communication and lifecycle
