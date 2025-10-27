@@ -11,7 +11,6 @@ namespace SAL.Flatbed
 	{
 		private volatile TraceSource _trace;
 
-		private readonly Object _sync = new Object();
 		private readonly Object _settingsLock = new Object();
 		private readonly Dictionary<IPlugin, ISettingsProvider> _pluginSettings = new Dictionary<IPlugin, ISettingsProvider>();
 		private readonly List<ISettingsPluginProvider> _settingsProvider = new List<ISettingsPluginProvider>();
@@ -151,15 +150,12 @@ namespace SAL.Flatbed
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin));
 
-			lock(_sync)
-			{
-				if(this[plugin.ID] != null)
-					throw new ArgumentException($"Plugin {plugin.ID} already loaded", nameof(plugin));
+			if(this.Plugins.ContainsKey(plugin.ID))
+				throw new ArgumentException($"Plugin {plugin.ID} already loaded", nameof(plugin));
 
-				this.Trace.TraceInformation("Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
+			this.Trace.TraceInformation("Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
 
-				this.Plugins.Add(plugin.ID, plugin);
-			}
+			this.Plugins.Add(plugin.ID, plugin);
 
 			if(plugin.Instance != null)
 			{
