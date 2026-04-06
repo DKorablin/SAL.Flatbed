@@ -10,22 +10,25 @@ namespace SAL.Flatbed
 		private PropertyInfo Property { get; }
 
 		/// <summary>Property name</summary>
-		public override String Name { get => this.Property.Name; }
+		public override String Name => this.Property.Name;
 
 		/// <summary>String naming of element type</summary>
-		public override String TypeName { get => this.Property.PropertyType.ToString(); }
+		public override String TypeName => this.Property.PropertyType.ToString();
+
+		/// <summary>Assembly qualified name of element type</summary>
+		public override String AssemblyQualifiedName => this.Property.PropertyType.AssemblyQualifiedName;
 
 		/// <summary>Element type</summary>
-		public override MemberTypes MemberType { get => this.Property.MemberType; }
+		public override MemberTypes MemberType => this.Property.MemberType;
 
 		/// <summary>Count of input parameters</summary>
-		public Int32 Count { get => this.Property.GetIndexParameters().Length; }
+		public Int32 Count => this.Property.GetIndexParameters().Length;
 
 		/// <summary>This property can be read</summary>
-		public Boolean CanRead { get => this.Property.CanRead; }
+		public Boolean CanRead => this.Property.CanRead;
 
 		/// <summary>This property can be write</summary>
-		public Boolean CanWrite { get => this.Property.CanWrite; }
+		public Boolean CanWrite => this.Property.CanWrite;
 
 		/// <summary>Create instance of property description</summary>
 		/// <param name="property">Property reflection</param>

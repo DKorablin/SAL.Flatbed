@@ -254,7 +254,7 @@ namespace SAL.Flatbed
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin));
 
-			Boolean isDisconnected = plugin.Instance.OnDisconnection(DisconnectMode.UserClosed);
+			Boolean isDisconnected = plugin.Instance?.OnDisconnection(DisconnectMode.UserClosed) ?? false;
 			if(isDisconnected)
 			{
 				this.OnPluginUnloaded(plugin);
@@ -272,10 +272,6 @@ namespace SAL.Flatbed
 		public virtual void RemovePlugins()
 			=> this.Plugins.Clear();
 
-		/// <inheritdoc/>
-		void IPluginStorage.SetSetingsProvider(IPluginDescription plugin)
-			=> this.SetSettingsProvider(plugin);
-
 		/// <summary>Set new settings provider</summary>
 		/// <param name="plugin">Plugin that is installed as a settings provider</param>
 		/// <exception cref="ArgumentNullException">Plugin can't be null</exception>
@@ -283,8 +279,7 @@ namespace SAL.Flatbed
 		public void SetSettingsProvider(IPluginDescription plugin)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin), "Plugin is null");
-			if(plugin.Instance == null)
-				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
+			_ = plugin.Instance ?? throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
 
 			//Installing the parent bootloader
 			this.Trace.TraceInformation("Set Settings Provider ID = {0}", plugin.ID);
@@ -331,8 +326,7 @@ namespace SAL.Flatbed
 		public void SetPluginProvider(IPluginDescription plugin)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin), "Plugin provider is null");
-			if(plugin.Instance == null)
-				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
+			_ = plugin.Instance ?? throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Plugin Provider", nameof(plugin));
 
 			//Installing the parent bootloader
 			this.Trace.TraceInformation("Set Plugin Provider ID = {0}", plugin.ID);
@@ -372,7 +366,7 @@ namespace SAL.Flatbed
 					if(uPlugin != null && this.WrapAndLoadPlugin(uPlugin, unresolved.Source, unresolved.Mode))
 					{
 						this._unresolvedPlugins.RemoveAt(loop);
-						loop = this._unresolvedPlugins.Count;//We start the cycle from the beginning, because the element might have already been loaded.
+						loop = this._unresolvedPlugins.Count;//We start the cycle from the end, because the element might have already been loaded.
 					}
 				}
 			}
@@ -416,7 +410,7 @@ namespace SAL.Flatbed
 					args[loop] = this.Host;
 				else
 				{
-					if(parameterType == typeof(IEnumerable<>))//TODO: It is necessary to postpone it for post-processing
+					if(parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
 						parameterType = parameterType.GetGenericArguments()[0];
 
 					List<Object> instances = new List<Object>();

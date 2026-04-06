@@ -8,38 +8,34 @@ namespace SAL.Flatbed
 	[DebuggerDisplay("Name={Name} (Type={TypeName})")]
 	public class PluginMemberInfo : IPluginMemberInfo
 	{
-		private TraceSource _trace;
-
 		/// <summary>Member name</summary>
-		public virtual String Name { get => this.Member.Name; }
+		public virtual String Name => this.Member.Name;
 
 		/// <summary>Full member name</summary>
 		public virtual String TypeName
-		{
-			get => this.Member.ReflectedType == null
+			=> this.Member.ReflectedType == null
 				? ((Type)this.Member).FullName
 				: this.Member.ReflectedType.FullName;
-		}
+
+		/// <summary>Assembly qualified member name</summary>
+		public virtual String AssemblyQualifiedName
+			=> this.Member.ReflectedType == null
+				? ((Type)this.Member).AssemblyQualifiedName
+				: this.Member.ReflectedType.AssemblyQualifiedName;
 
 		/// <summary>Member type</summary>
-		public virtual MemberTypes MemberType { get => this.Member.MemberType; }
+		public virtual MemberTypes MemberType => this.Member.MemberType;
 
 		/// <summary>Reflected member information</summary>
 		protected MemberInfo Member { get; }
 
 		/// <summary>Reflected member type</summary>
-		protected Type ReflectedType { get => this.Member as Type; }
+		protected Type ReflectedType => this.Member as Type;
 
 		private PluginMemberInfo Parent { get; }
 
 		/// <summary>Object instance where reference is stored</summary>
 		private Object Target { get; }
-
-		/// <summary>Trace instance</summary>
-		protected internal TraceSource Trace
-		{
-			get => this._trace ?? (this._trace = PluginMemberInfo.CreateTraceSource(PluginConstant.TraceSourceName));
-		}
 
 		/// <summary>Create instance of plugin member information</summary>
 		/// <param name="member">Member information reflection</param>
@@ -101,15 +97,6 @@ namespace SAL.Flatbed
 			default:
 				return this.Parent.GetTarget();
 			}
-		}
-
-		private static TraceSource CreateTraceSource(String name)
-		{
-			TraceSource result = new TraceSource(name);
-			result.Switch.Level = SourceLevels.All;
-			result.Listeners.Remove("Default");
-			result.Listeners.AddRange(System.Diagnostics.Trace.Listeners);
-			return result;
 		}
 	}
 }

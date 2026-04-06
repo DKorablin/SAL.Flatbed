@@ -59,20 +59,32 @@ namespace SAL.Flatbed
 		/// <summary>Dispose host and unload all loaded plugins</summary>
 		public void Dispose()
 		{
-			this.UnloadPlugins(DisconnectMode.HostShutdown);
-			foreach(IPluginDescription settings in this.Plugins.FindPluginType<ISettingsPluginProvider>())
-				settings.Instance.OnDisconnection(DisconnectMode.FlatbedClosed);
-
-			IPluginProvider plugins = this.Plugins.PluginProvider;
-			while(plugins != null)
-			{
-				plugins.OnDisconnection(DisconnectMode.FlatbedClosed);
-				plugins = plugins.ParentProvider;
-			}
-
-			AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
-
+			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
+
+		/// <summary>Protected implementation of Dispose pattern.</summary>
+		/// <param name="disposing">True if called from Dispose; false if called from finalizer.</param>
+		protected virtual void Dispose(Boolean disposing)
+		{
+			if (disposing)
+			{
+				this.UnloadPlugins(DisconnectMode.HostShutdown);
+				foreach(IPluginDescription settings in this.Plugins.FindPluginType<ISettingsPluginProvider>())
+					settings.Instance.OnDisconnection(DisconnectMode.FlatbedClosed);
+
+				IPluginProvider plugins = this.Plugins.PluginProvider;
+				while(plugins != null)
+				{
+					plugins.OnDisconnection(DisconnectMode.FlatbedClosed);
+					plugins = plugins.ParentProvider;
+				}
+
+				AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(this.CurrentDomain_AssemblyResolve);
+			}
+		}
+
+		~HostBase()
+			=> Dispose(false);
 	}
 }

@@ -12,6 +12,9 @@ namespace SAL.Flatbed
 		/// <summary>Full member name</summary>
 		String TypeName { get; }
 
+		/// <summary>Assembly qualified member name</summary>
+		String AssemblyQualifiedName { get; }
+
 		/// <summary>Member type</summary>
 		MemberTypes MemberType { get; }
 

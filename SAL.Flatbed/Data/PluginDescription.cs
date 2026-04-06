@@ -13,7 +13,9 @@ namespace SAL.Flatbed
 		private IPluginTypeInfo _type;
 
 		/// <summary>Plugin identifier</summary>
-		/// <exception cref="ArgumentNullException">GuidAttribute not declared on assembly level</exception>
+		/// <exception cref="ArgumentNullException">
+		/// <see cref="GuidAttribute"/> is not declared on assembly level.
+		/// Or <see cref="PluginEntryPointAttribute"/> is not defined on plugin level.</exception>
 		public String ID
 		{
 			get
@@ -23,9 +25,8 @@ namespace SAL.Flatbed
 					return pluginAttribute.ID;
 				else
 				{
-					GuidAttribute guid = this.GetAssemblyAttribute<GuidAttribute>();
-					if(guid == null)
-						throw new ArgumentNullException("GuidAttribute not specified in assembly " + this.Instance.GetType().Assembly.FullName);
+					GuidAttribute guid = this.GetAssemblyAttribute<GuidAttribute>()
+						?? throw new ArgumentNullException($"{nameof(GuidAttribute)} is not specified in assembly {this.Instance.GetType().Assembly.FullName}");
 
 					return guid.Value;
 				}
@@ -110,6 +111,7 @@ namespace SAL.Flatbed
 		/// <summary>Create instance of plugin description</summary>
 		/// <param name="instance">Interface for accessing plugin methods</param>
 		/// <param name="source">Plugin source</param>
+		/// <exception cref="ArgumentNullException"><paramref name="instance"/> and <paramref name="source"/> are required</exception>
 		public PluginDescription(IPlugin instance, String source)
 		{
 			if(String.IsNullOrEmpty(source))

@@ -26,7 +26,7 @@ namespace SAL.Flatbed
 		/// <param name="version">Version</param>
 		/// <param name="name">Plugin class friendly name</param>
 		/// <param name="description">Plugin class description</param>
-		/// <exception cref="ArgumentNullException">id required</exception>
+		/// <exception cref="ArgumentNullException"><paramref name="id"/> required</exception>
 		public PluginEntryPointAttribute(String id, String version, String name, String description)
 		{
 			if(String.IsNullOrEmpty(id))

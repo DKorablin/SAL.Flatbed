@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SAL.Flatbed
+﻿namespace SAL.Flatbed
 {
 	/// <summary>Informs the add-in about how it was loaded</summary>
 	public enum ConnectMode
