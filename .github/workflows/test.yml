@@ -39,7 +39,7 @@ jobs:
     - name: Restoring dependencies
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Testing .NET
-      run: dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
+      run: dotnet test ${{env.SolutionName}}.sln --verbosity normal
 
   build:
     name: Build
