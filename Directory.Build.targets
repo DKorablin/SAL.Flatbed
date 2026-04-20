@@ -2,10 +2,10 @@
 	<Target Name="BeforeBuild">
 		<ItemGroup>
 			<AssemblyAttributes Include="AssemblyVersion">
-				<_Parameter1>$(Version)</_Parameter1>
+				<_Parameter1>$(AssemblyVersion)</_Parameter1>
 			</AssemblyAttributes>
 			<AssemblyAttributes Include="AssemblyFileVersion">
-				<_Parameter1>$(Version)</_Parameter1>
+				<_Parameter1>$(FileVersion)</_Parameter1>
 			</AssemblyAttributes>
 			<AssemblyAttributes Include="AssemblyInformationalVersion">
 				<_Parameter1>$(Version)</_Parameter1>

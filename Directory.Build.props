@@ -3,6 +3,11 @@
 		<Version>1.2.12.0</Version>
 	</PropertyGroup>
 	<PropertyGroup>
+		<!-- Strip pre-release suffix for assembly attributes that require numeric-only versions: '1.2.13-beta1' -> '1.2.13' -->
+		<AssemblyVersion>$([System.Text.RegularExpressions.Regex]::Match($(Version), '^\d+(\.\d+)*').Value)</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+	</PropertyGroup>
+	<PropertyGroup>
 		<ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$(SolutionDir)..\bin\$(SolutionName)</ArtifactsDir>
 		<OutputPath>$(ArtifactsDir)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>True</AppendTargetFrameworkToOutputPath>

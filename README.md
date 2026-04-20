@@ -34,7 +34,7 @@ SAL is a plugin-based architecture for building modular .NET applications, origi
 ### Component Hierarchy
 
 1. **Application Layer**
-   - Supports multiple hosts: [MDI](https://dkorablin.github.io/Flatbed-MDI/), [Dialog-based](https://dkorablin.github.io/Flatbed-Dialog/), EnvDTE, [Windows Service](https://dkorablin.github.io/Flatbed-WorkerService/), ASP.NET
+   - Supports multiple hosts (See below): [MDI](https://dkorablin.github.io/Flatbed-MDI/), [Dialog-based](https://dkorablin.github.io/Flatbed-Dialog/), EnvDTE, [Windows Service](https://dkorablin.github.io/Flatbed-WorkerService/), ASP.NET
 
 2. **SAL Host**
    - Manages plugin communication and lifecycle

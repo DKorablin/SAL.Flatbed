@@ -18,8 +18,10 @@ namespace SAL.Flatbed
 		/// <summary>Array of public properties, methods and events</summary>
 		IEnumerable<IPluginMemberInfo> Members { get; }
 
-		/// <summary>Array of generic parameters</summary>
-		IEnumerable<IPluginTypeInfo> GenericMembers { get; }
+		/// <summary>Array of underrlying parameters, it could be generic or element parameters.</summary>
+		/// <see cref="IsArray"/>
+		/// <see cref="IsGeneric"/>
+		IEnumerable<IPluginTypeInfo> UnderlyingMembers { get; }
 
 		/// <summary>Get default values (Enum or default value for the parameter included in the method)</summary>
 		/// <returns>Array of default values</returns>

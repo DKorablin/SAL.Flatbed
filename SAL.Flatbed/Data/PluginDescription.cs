@@ -26,7 +26,7 @@ namespace SAL.Flatbed
 				else
 				{
 					GuidAttribute guid = this.GetAssemblyAttribute<GuidAttribute>()
-						?? throw new ArgumentNullException($"{nameof(GuidAttribute)} is not specified in assembly {this.Instance.GetType().Assembly.FullName}");
+						?? throw new ArgumentNullException($"{nameof(GuidAttribute)} is not specified in assembly {this.GetInstanceType().Assembly.FullName}");
 
 					return guid.Value;
 				}
@@ -102,11 +102,11 @@ namespace SAL.Flatbed
 		/// <summary>Get all available types to call from outside</summary>
 		public IPluginTypeInfo Type
 		{
-			get => this._type ?? (this._type = new PluginTypeInfo(this.Instance.GetType(), this.Instance, null));
+			get => this._type ?? (this._type = new PluginTypeInfo(this.GetInstanceType(), this.Instance, null));
 		}
 
 		/// <summary>Assembly where plugin is hosted</summary>
-		private Assembly Assembly { get => this.Instance.GetType().Assembly; }
+		private Assembly Assembly { get => this.GetInstanceType().Assembly; }
 
 		/// <summary>Create instance of plugin description</summary>
 		/// <param name="instance">Interface for accessing plugin methods</param>
@@ -126,7 +126,7 @@ namespace SAL.Flatbed
 		/// <returns>First found attribute or null</returns>
 		protected A GetPluginAttribute<A>() where A : Attribute
 		{
-			Object[] attributes = this.Instance.GetType().GetCustomAttributes(typeof(A), false);
+			Object[] attributes = this.GetInstanceType().GetCustomAttributes(typeof(A), false);
 			return attributes.Length == 0 ? null : (A)attributes[0];
 		}
 
@@ -138,5 +138,8 @@ namespace SAL.Flatbed
 			Object[] attributes = this.Assembly.GetCustomAttributes(typeof(A), false);
 			return attributes.Length == 0 ? null : (A)attributes[0];
 		}
+
+		internal virtual Type GetInstanceType()
+			=> this.Instance.GetType();
 	}
 }
