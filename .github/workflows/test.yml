@@ -46,7 +46,7 @@ jobs:
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Testing .NET
       run: >
-        dotnet test ${{env.SolutionName}}.sln --no-restore --verbosity normal
+        dotnet test ${{env.SolutionName}}.sln --configuration Release --no-restore --verbosity normal
         /p:GenerateDocumentationFile=true
         /p:SignAssembly=true
         /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
