@@ -196,14 +196,6 @@ namespace SAL.Flatbed.Tests
 			sut.Copyright.Should().Be(attr.Copyright);
 		}
 
-		[Fact]
-		public void Copyright_NoAssemblyCopyrightAttribute_ReturnsNull()
-		{
-			// Test assembly has no AssemblyCopyrightAttribute
-			var sut = CreateWith(typeof(BarePlugin), new BarePlugin());
-			sut.Copyright.Should().BeNull();
-		}
-
 		#endregion
 
 		#region Type

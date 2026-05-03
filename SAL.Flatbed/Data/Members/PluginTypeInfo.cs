@@ -26,8 +26,28 @@ namespace SAL.Flatbed
 		private Boolean IsEnum
 			=> base.ReflectedType != null && base.ReflectedType.IsEnum;
 
-		private Boolean IsNativeType//TODO: Come up with an algorithm for determining BCL assemblies
-			=> base.Member.Module.Assembly.GlobalAssemblyCache;//return base.Member.Module.Assembly.GetName().Name == "mscorlib";
+		private Boolean IsNativeType
+		{
+			get
+			{
+				var assembly = base.Member.Module.Assembly;
+				// GAC check for .NET Framework (Backward compatibility)
+				if(assembly.GlobalAssemblyCache)
+					return true;
+
+				// Token check for assemblies that are part of .NET Framework, .NET Core and .NET Standard
+				var publicKeyToken = assembly.GetName().GetPublicKeyToken();
+				if(publicKeyToken != null && publicKeyToken.Length > 0)
+				{
+					var token = BitConverter.ToString(publicKeyToken).Replace("-", "").ToLower();
+					if(token == "b77a5c561934e089" || token == "b03f5f7f11d50a3a" ||
+						token == "7cec85d7bea7798e" || token == "cc7b13ffcd2ddd51")
+						return true;
+				}
+
+				return false;
+			}
+		}
 
 		/// <summary>Array of available members</summary>
 		public IEnumerable<IPluginMemberInfo> Members
