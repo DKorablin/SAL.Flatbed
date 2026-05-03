@@ -223,7 +223,7 @@ namespace SAL.Flatbed
 				return true;
 			} else
 			{
-				Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Duplicate plugin found",
+				this.Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Duplicate plugin found",
 					pluginBase.Name,
 					pluginBase.Source,
 					pluginLoaded.Name,
@@ -353,12 +353,9 @@ namespace SAL.Flatbed
 		}
 
 		public virtual ITraceSource CreateTraceSource(String name)
-		{
-			if(String.IsNullOrEmpty(name))
-				throw new ArgumentNullException(nameof(name));
-
-			return new TraceSourceAdapter(name);
-		}
+			=> String.IsNullOrEmpty(name)
+				? throw new ArgumentNullException(nameof(name))
+				: new TraceSourceAdapter(name);
 
 		/// <summary>Get stream of all loaded plugins</summary>
 		/// <returns>Enumerated type interface</returns>
