@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 
 namespace SAL.Flatbed.Tests
@@ -106,6 +106,20 @@ namespace SAL.Flatbed.Tests
 		public ITestDependency Dependency { get; }
 
 		public TestDependencyUserPlugin(ITestDependency dep) => this.Dependency = dep;
+
+		public Boolean OnConnection(ConnectMode mode) => true;
+
+		public Boolean OnDisconnection(DisconnectMode mode) => true;
+	}
+
+	[PluginEntryPoint(TestTraceSourceDependentPlugin.Id, "1.0.0.0", "TestTraceSourceDependentPlugin", "")]
+	public class TestTraceSourceDependentPlugin : IPlugin
+	{
+		public const String Id = "A1B2C3D4-0000-0000-0000-000000000009";
+
+		public ITraceSource Trace { get; }
+
+		public TestTraceSourceDependentPlugin(ITraceSource trace) => this.Trace = trace;
 
 		public Boolean OnConnection(ConnectMode mode) => true;
 

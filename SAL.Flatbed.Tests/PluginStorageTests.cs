@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -63,31 +63,31 @@ namespace SAL.Flatbed.Tests
 
 		#endregion
 
-		#region Indexer
+		#region IndexerPluginId
 
 		[Fact]
-		public void Indexer_NullId_ReturnsNull()
+		public void IndexerPluginId_NullId_ReturnsNull()
 		{
 			var storage = CreateStorage();
-			storage[null].Should().BeNull();
+			storage[(String)null].Should().BeNull();
 		}
 
 		[Fact]
-		public void Indexer_EmptyId_ReturnsNull()
+		public void IndexerPluginId_EmptyId_ReturnsNull()
 		{
 			var storage = CreateStorage();
 			storage[String.Empty].Should().BeNull();
 		}
 
 		[Fact]
-		public void Indexer_NonExistentId_ReturnsNull()
+		public void IndexerPluginId_NonExistentId_ReturnsNull()
 		{
 			var storage = CreateStorage();
 			storage["non-existent"].Should().BeNull();
 		}
 
 		[Fact]
-		public void Indexer_ExistingId_ReturnsPlugin()
+		public void IndexerPluginId_ExistingId_ReturnsPlugin()
 		{
 			var storage = CreateStorage();
 			var desc = CreateMockDescription("my-plugin-id").Object;
@@ -671,5 +671,155 @@ namespace SAL.Flatbed.Tests
 		}
 
 		#endregion
+
+		#region IndexerPlugin
+
+		[Fact]
+		public void IndexerPlugin_NullPlugin_ReturnsNull()
+		{
+			var storage = CreateStorage();
+			storage[(IPlugin)null].Should().BeNull();
+		}
+
+		[Fact]
+		public void IndexerPlugin_NonExistentPlugin_ReturnsNull()
+		{
+			var storage = CreateStorage();
+			storage[new Mock<IPlugin>().Object].Should().BeNull();
+		}
+
+		[Fact]
+		public void IndexerPlugin_ExistingPlugin_ReturnsDescription()
+		{
+			var storage = CreateStorage();
+			var pluginMock = new Mock<IPlugin>();
+			var desc = CreateMockDescription("plugin-inst-id", pluginMock.Object).Object;
+			storage.LoadPlugin(desc, ConnectMode.Startup);
+			storage[pluginMock.Object].Should().BeSameAs(desc);
+		}
+
+		[Fact]
+		public void IndexerPlugin_MatchesByInstance_NotById()
+		{
+			var storage = CreateStorage();
+			var pluginMock1 = new Mock<IPlugin>();
+			var pluginMock2 = new Mock<IPlugin>();
+			storage.LoadPlugin(CreateMockDescription("id-1", pluginMock1.Object).Object, ConnectMode.Startup);
+			storage.LoadPlugin(CreateMockDescription("id-2", pluginMock2.Object).Object, ConnectMode.Startup);
+			storage[pluginMock1.Object].Should().BeSameAs(storage["id-1"]);
+			storage[pluginMock2.Object].Should().BeSameAs(storage["id-2"]);
+		}
+
+		[Fact]
+		public void IndexerPlugin_AfterUnload_ReturnsNull()
+		{
+			var storage = CreateStorage();
+			var pluginMock = new Mock<IPlugin>();
+			pluginMock.Setup(p => p.OnDisconnection(DisconnectMode.UserClosed)).Returns(true);
+			var desc = CreateMockDescription("unloaded-id", pluginMock.Object).Object;
+			storage.LoadPlugin(desc, ConnectMode.Startup);
+			storage.UnloadPlugin(desc);
+			storage[pluginMock.Object].Should().BeNull();
+		}
+
+		#endregion
+
+		#region GetTraceSource
+
+		[Fact]
+		public void GetTraceSource_NullName_ThrowsArgumentNullException()
+		{
+			var storage = CreateStorage();
+			Action act = () => storage.GetTraceSource(null);
+			act.Should().Throw<ArgumentNullException>().WithParameterName("name");
+		}
+
+		[Fact]
+		public void GetTraceSource_EmptyName_ThrowsArgumentNullException()
+		{
+			var storage = CreateStorage();
+			Action act = () => storage.GetTraceSource(String.Empty);
+			act.Should().Throw<ArgumentNullException>().WithParameterName("name");
+		}
+
+		[Fact]
+		public void GetTraceSource_ValidName_ReturnsNonNullITraceSource()
+		{
+			var storage = CreateStorage();
+			storage.GetTraceSource("test-source").Should().NotBeNull().And.BeAssignableTo<ITraceSource>();
+		}
+
+		[Fact]
+		public void GetTraceSource_CalledTwiceWithSameName_ReturnsDifferentInstances()
+		{
+			var storage = CreateStorage();
+			var first = storage.GetTraceSource("test-source");
+			var second = storage.GetTraceSource("test-source");
+			first.Should().NotBeSameAs(second);
+		}
+
+		[Fact]
+		public void GetTraceSource_IsVirtual_SubclassCanOverride()
+		{
+			var traceMock = new Mock<ITraceSource>().Object;
+			var storage = new FixedTraceSourceStorage(CreateHostMock().Object, traceMock);
+			storage.GetTraceSource("any").Should().BeSameAs(traceMock);
+		}
+
+		#endregion
+
+		#region TraceSource Dependency Resolution
+
+		[Fact]
+		public void LoadPlugin_PluginWithTraceSourceDependency_IsLoaded()
+		{
+			// ITraceSource resolution in ResolveAndCreate is not yet implemented —
+			var storage = CreateStorage();
+			storage.LoadPlugin(TestAssembly, typeof(TestTraceSourceDependentPlugin).FullName, "test", ConnectMode.Startup);
+			storage.Count.Should().Be(1);
+			storage[TestTraceSourceDependentPlugin.Id].Should().NotBeNull();
+		}
+
+		[Fact]
+		public void LoadPlugin_PluginWithTraceSourceDependency_TraceSourceIsInjected()
+		{
+			var storage = CreateStorage();
+			storage.LoadPlugin(TestAssembly, typeof(TestTraceSourceDependentPlugin).FullName, "test", ConnectMode.Startup);
+			var plugin = (TestTraceSourceDependentPlugin)storage[TestTraceSourceDependentPlugin.Id].Instance;
+			plugin.Trace.Should().NotBeNull();
+		}
+
+		[Fact]
+		public void LoadPlugin_PluginWithTraceSourceDependency_UsesAssemblyNameAsTraceName()
+		{
+			var traceMock = new Mock<ITraceSource>().Object;
+			String capturedName = null;
+			var storage = new FixedTraceSourceStorage(CreateHostMock().Object, traceMock, name => capturedName = name);
+			storage.LoadPlugin(TestAssembly, typeof(TestTraceSourceDependentPlugin).FullName, "test", ConnectMode.Startup);
+			capturedName.Should().Be(TestAssembly.GetName().Name);
+		}
+
+		#endregion
+	}
+
+	/// <summary>Overrides <see cref="PluginStorage.GetTraceSource"/> to return a fixed instance,
+	/// used to verify the method is correctly declared as virtual.
+	/// An optional <paramref name="onGetTraceSource"/> callback captures the name passed to the method.</summary>
+	internal sealed class FixedTraceSourceStorage : PluginStorage
+	{
+		private readonly ITraceSource _trace;
+		private readonly Action<String> _onGetTraceSource;
+
+		public FixedTraceSourceStorage(IHost host, ITraceSource trace, Action<String> onGetTraceSource = null) : base(host)
+		{
+			this._trace = trace;
+			this._onGetTraceSource = onGetTraceSource;
+		}
+
+		public override ITraceSource GetTraceSource(String name)
+		{
+			this._onGetTraceSource?.Invoke(name);
+			return this._trace;
+		}
 	}
 }
