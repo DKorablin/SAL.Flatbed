@@ -1,5 +1,7 @@
 ﻿# SAL (Software Abstraction Layer)
 [![Auto build](https://github.com/DKorablin/SAL.Flatbed/actions/workflows/release.yml/badge.svg)](https://github.com/DKorablin/SAL.Flatbed/releases/latest)
+[![NuGet](https://img.shields.io/nuget/v/SAL.Flatbed)](https://www.nuget.org/packages/SAL.Flatbed)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/SAL.Flatbed)](https://www.nuget.org/packages/SAL.Flatbed)
 
 ## Overview
 
