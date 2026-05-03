@@ -21,7 +21,7 @@ namespace SAL.Flatbed
 		private IHost Host { get; }
 
 		private ITraceSource Trace
-			=> this._trace ?? (this._trace = this.GetTraceSource(PluginConstant.TraceSourceName));
+			=> this._trace ?? (this._trace = this.CreateTraceSource(PluginConstant.TraceSourceName));
 
 		/// <summary>Storage for all loaded plugins</summary>
 		private IDictionary<String, IPluginDescription> Plugins { get; } = new Dictionary<String, IPluginDescription>();
@@ -352,7 +352,7 @@ namespace SAL.Flatbed
 			this._pluginProvider = plugin;
 		}
 
-		public virtual ITraceSource GetTraceSource(String name)
+		public virtual ITraceSource CreateTraceSource(String name)
 		{
 			if(String.IsNullOrEmpty(name))
 				throw new ArgumentNullException(nameof(name));
@@ -433,7 +433,7 @@ namespace SAL.Flatbed
 				if(PluginUtils.InstanceOf(parameterType, this.Host.GetType()))
 					args[loop] = this.Host;
 				else if(parameterType == typeof(ITraceSource))
-					args[loop] = this.GetTraceSource(pluginType.Assembly.GetName().Name);
+					args[loop] = this.CreateTraceSource(pluginType.Assembly.GetName().Name);
 				else
 				{
 					if(parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))

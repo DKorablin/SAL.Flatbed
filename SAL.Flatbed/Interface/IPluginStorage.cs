@@ -83,9 +83,9 @@ namespace SAL.Flatbed
 		/// <param name="plugin">Plugin that is installed as a new plugin provider</param>
 		void SetPluginProvider(IPluginDescription plugin);
 
-		/// <summary>Get trace source by name</summary>
+		/// <summary>Creates trace source by name</summary>
 		/// <param name="name">Trace source name</param>
 		/// <returns>Trace source with the name</returns>
-		ITraceSource GetTraceSource(String name);
+		ITraceSource CreateTraceSource(String name);
 	}
 }

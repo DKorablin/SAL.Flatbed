@@ -730,7 +730,7 @@ namespace SAL.Flatbed.Tests
 		public void GetTraceSource_NullName_ThrowsArgumentNullException()
 		{
 			var storage = CreateStorage();
-			Action act = () => storage.GetTraceSource(null);
+			Action act = () => storage.CreateTraceSource(null);
 			act.Should().Throw<ArgumentNullException>().WithParameterName("name");
 		}
 
@@ -738,7 +738,7 @@ namespace SAL.Flatbed.Tests
 		public void GetTraceSource_EmptyName_ThrowsArgumentNullException()
 		{
 			var storage = CreateStorage();
-			Action act = () => storage.GetTraceSource(String.Empty);
+			Action act = () => storage.CreateTraceSource(String.Empty);
 			act.Should().Throw<ArgumentNullException>().WithParameterName("name");
 		}
 
@@ -746,15 +746,15 @@ namespace SAL.Flatbed.Tests
 		public void GetTraceSource_ValidName_ReturnsNonNullITraceSource()
 		{
 			var storage = CreateStorage();
-			storage.GetTraceSource("test-source").Should().NotBeNull().And.BeAssignableTo<ITraceSource>();
+			storage.CreateTraceSource("test-source").Should().NotBeNull().And.BeAssignableTo<ITraceSource>();
 		}
 
 		[Fact]
 		public void GetTraceSource_CalledTwiceWithSameName_ReturnsDifferentInstances()
 		{
 			var storage = CreateStorage();
-			var first = storage.GetTraceSource("test-source");
-			var second = storage.GetTraceSource("test-source");
+			var first = storage.CreateTraceSource("test-source");
+			var second = storage.CreateTraceSource("test-source");
 			first.Should().NotBeSameAs(second);
 		}
 
@@ -763,7 +763,7 @@ namespace SAL.Flatbed.Tests
 		{
 			var traceMock = new Mock<ITraceSource>().Object;
 			var storage = new FixedTraceSourceStorage(CreateHostMock().Object, traceMock);
-			storage.GetTraceSource("any").Should().BeSameAs(traceMock);
+			storage.CreateTraceSource("any").Should().BeSameAs(traceMock);
 		}
 
 		#endregion
@@ -808,17 +808,17 @@ namespace SAL.Flatbed.Tests
 	internal sealed class FixedTraceSourceStorage : PluginStorage
 	{
 		private readonly ITraceSource _trace;
-		private readonly Action<String> _onGetTraceSource;
+		private readonly Action<String> _onCreateTraceSource;
 
-		public FixedTraceSourceStorage(IHost host, ITraceSource trace, Action<String> onGetTraceSource = null) : base(host)
+		public FixedTraceSourceStorage(IHost host, ITraceSource trace, Action<String> onCreateTraceSource = null) : base(host)
 		{
 			this._trace = trace;
-			this._onGetTraceSource = onGetTraceSource;
+			this._onCreateTraceSource = onCreateTraceSource;
 		}
 
-		public override ITraceSource GetTraceSource(String name)
+		public override ITraceSource CreateTraceSource(String name)
 		{
-			this._onGetTraceSource?.Invoke(name);
+			this._onCreateTraceSource?.Invoke(name);
 			return this._trace;
 		}
 	}
