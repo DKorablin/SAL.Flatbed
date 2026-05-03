@@ -6,7 +6,7 @@ namespace SAL.Flatbed
 	/// <summary>Plugin event information</summary>
 	public class PluginEventInfo : PluginMemberInfo, IPluginEventInfo
 	{
-		private new EventInfo Member { get => (EventInfo)base.Member; }
+		private new EventInfo Member => (EventInfo)base.Member;
 
 		/// <summary>Create instance of plugin event information</summary>
 		/// <param name="evt">Event reflection</param>

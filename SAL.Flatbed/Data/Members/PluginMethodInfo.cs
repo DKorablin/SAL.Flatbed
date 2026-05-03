@@ -22,7 +22,7 @@ namespace SAL.Flatbed
 		}
 
 		/// <summary>Input arguments count</summary>
-		public Int32 Count { get => this.Member.GetParameters().Length; }
+		public Int32 Count => this.Member.GetParameters().Length;
 
 		/// <summary>Create instance of plugin method description</summary>
 		/// <param name="method">Method reflection</param>
@@ -59,7 +59,7 @@ namespace SAL.Flatbed
 				} catch(Exception exc)
 				{
 					exc.Data.Add("MethodName", base.Name);
-					exc.Data.Add("TypeName", base.TypeName);
+					exc.Data.Add(nameof(base.TypeName), base.TypeName);
 					throw;
 				}
 			}
