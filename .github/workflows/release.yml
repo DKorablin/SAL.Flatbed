@@ -27,7 +27,7 @@ defaults:
     shell: pwsh
 
 jobs:
-  test_net_windows:
+  test_net:
     name: Testing .NET (Ubuntu)
     runs-on: ubuntu-latest
     steps:
@@ -52,17 +52,18 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{env.DotNetVersion}}
-    - name: Restore
+    - name: Restoring dependencies
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Testing
-      run: dotnet test ${{env.SolutionName}}.sln --configuration Release --no-build --verbosity normal
+      run: >
+        dotnet test ${{env.SolutionName}}.sln --configuration Release --no-restore --verbosity normal
         /p:GenerateDocumentationFile=true
         /p:SignAssembly=true
         /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
 
   version:
     name: Tag / Version
-    needs: [test_net_windows]
+    needs: [test_net]
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{steps.tag_version.outputs.new_version}}
