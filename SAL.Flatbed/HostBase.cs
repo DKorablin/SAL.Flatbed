@@ -85,6 +85,6 @@ namespace SAL.Flatbed
 		}
 
 		~HostBase()
-			=> Dispose(false);
+			=> this.Dispose(false);
 	}
 }
