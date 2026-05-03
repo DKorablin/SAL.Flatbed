@@ -13,13 +13,13 @@ namespace SAL.Flatbed
 		public IPluginMemberInfo Method { get; }
 
 		/// <summary>Argument marked as output parameter</summary>
-		public Boolean IsOut { get => this.Parameter.IsOut; }
+		public Boolean IsOut => this.Parameter.IsOut;
 
 		/// <summary>Argument name</summary>
-		public override String Name { get => this.Parameter.Name; }
+		public override String Name => this.Parameter.Name;
 
 		/// <summary>Argument type</summary>
-		public override MemberTypes MemberType { get => MemberTypes.TypeInfo; }
+		public override MemberTypes MemberType => MemberTypes.TypeInfo;
 
 		/// <summary>Create instance of method argument description</summary>
 		/// <param name="member">Method or property to which the argument or belongs</param>

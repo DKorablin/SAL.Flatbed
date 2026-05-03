@@ -12,7 +12,7 @@ namespace SAL.Flatbed
 
 	/// <summary>Strongly typed settings interface or child plugin object</summary>
 	/// <typeparam name="T">Settings object strongly type</typeparam>
-	public interface IPluginSettings<T> : IPluginSettings
+	public interface IPluginSettings<out T> : IPluginSettings
 	{
 		/// <summary>Strongly typed settings object</summary>
 		new T Settings { get; }

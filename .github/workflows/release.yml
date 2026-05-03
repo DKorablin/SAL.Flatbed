@@ -31,6 +31,12 @@ jobs:
     name: Testing .NET (Ubuntu)
     runs-on: ubuntu-latest
     steps:
+    - name: Decoding strong-name key
+      id: sign_key_file
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'Signature.snk'
+        encodedString: ${{secrets.SIGN_ASM_KEY}}
     - uses: actions/checkout@v4
       with:
         token: ${{secrets.SUBMODULE_TOKEN}}
@@ -49,7 +55,10 @@ jobs:
     - name: Restore
       run: dotnet restore ${{env.SolutionName}}.sln
     - name: Testing
-      run: dotnet test ${{env.SolutionName}}.sln --no-build --verbosity normal
+      run: dotnet test ${{env.SolutionName}}.sln --configuration Release --no-build --verbosity normal
+        /p:GenerateDocumentationFile=true
+        /p:SignAssembly=true
+        /p:AssemblyOriginatorKeyFile="${{steps.sign_key_file.outputs.filePath}}"
 
   version:
     name: Tag / Version

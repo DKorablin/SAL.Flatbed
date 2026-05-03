@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ namespace SAL.Flatbed
 	/// <summary>Basic plugin storage class</summary>
 	public class PluginStorage : IPluginStorage
 	{
-		private volatile TraceSource _trace;
+		private volatile ITraceSource _trace;
 
 		private readonly Object _settingsLock = new Object();
 		private readonly Dictionary<IPlugin, ISettingsProvider> _pluginSettings = new Dictionary<IPlugin, ISettingsProvider>();
@@ -20,8 +20,8 @@ namespace SAL.Flatbed
 
 		private IHost Host { get; }
 
-		private TraceSource Trace
-			=> this._trace ?? (this._trace = PluginStorage.CreateTraceSource(PluginConstant.TraceSourceName));
+		private ITraceSource Trace
+			=> this._trace ?? (this._trace = this.CreateTraceSource(PluginConstant.TraceSourceName));
 
 		/// <summary>Storage for all loaded plugins</summary>
 		private IDictionary<String, IPluginDescription> Plugins { get; } = new Dictionary<String, IPluginDescription>();
@@ -40,6 +40,22 @@ namespace SAL.Flatbed
 			get => String.IsNullOrEmpty(pluginId)
 				? null
 				: this.Plugins.TryGetValue(pluginId, out IPluginDescription result) ? result : null;
+		}
+
+		/// <summary>Gets plugin by base plugin interface</summary>
+		/// <param name="plugin">The plugin instance</param>
+		/// <returns>Plugin interface that was found by plugin instance or null when plugin instance is not found</returns>
+		public IPluginDescription this[IPlugin plugin]
+		{
+			get
+			{
+				if(plugin == null)
+					return null;
+				foreach(IPluginDescription pluginDescription in this.Plugins.Values)
+					if(plugin.Equals(pluginDescription.Instance))
+						return pluginDescription;
+				return null;
+			}
 		}
 
 		/// <summary>Count of all loaded plugins</summary>
@@ -85,7 +101,7 @@ namespace SAL.Flatbed
 		/// <exception cref="ArgumentException">Plugin or member not found</exception>
 		public virtual Object SendMessage(String pluginId, String message, params Object[] args)
 		{
-			this.Trace.TraceInformation("Sending message {0} to plugin ID = {1}", message, pluginId);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Sending message {0} to plugin ID = {1}", message, pluginId);
 
 			IPluginDescription plugin = this[pluginId];
 			if(plugin == null)
@@ -134,7 +150,7 @@ namespace SAL.Flatbed
 			if(String.IsNullOrEmpty(source))
 				throw new ArgumentNullException(nameof(source));
 
-			this.Trace.TraceInformation("Loading assembly {0} from {1} with mode {2}", assembly.FullName, source, mode);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Loading assembly {0} from {1} with mode {2}", assembly.FullName, source, mode);
 
 			foreach(Type pluginType in assembly.GetTypes())
 				if(PluginUtils.IsPluginType(pluginType))
@@ -153,7 +169,7 @@ namespace SAL.Flatbed
 			if(this.Plugins.ContainsKey(plugin.ID))
 				throw new ArgumentException($"Plugin {plugin.ID} already loaded", nameof(plugin));
 
-			this.Trace.TraceInformation("Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Loading {0} (ID={1}) from {2} with mode {3} ...", plugin.Name, plugin.ID, plugin.Source, mode);
 
 			this.Plugins.Add(plugin.ID, plugin);
 
@@ -192,7 +208,7 @@ namespace SAL.Flatbed
 			if(!PluginUtils.IsPluginType(pluginType))
 				throw new ArgumentException(pluginType.FullName, $"Assembly {assembly.FullName}. Type must be public class and inherit interface {PluginConstant.PluginInterface}");
 
-			this.Trace.TraceInformation("Loading type {0} from assembly '{1}'", pluginType.FullName, assembly.FullName);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Loading type {0} from assembly '{1}'", pluginType.FullName, assembly.FullName);
 
 			this.LoadPluginType(pluginType, source, mode);
 		}
@@ -207,7 +223,7 @@ namespace SAL.Flatbed
 				return true;
 			} else
 			{
-				Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Duplicate plugin found",
+				this.Trace.TraceEvent(TraceEventType.Warning, 10, "Plugin Excluded: {0}({1}). Loaded: {2}({3}) Same ID={4}. Duplicate plugin found",
 					pluginBase.Name,
 					pluginBase.Source,
 					pluginLoaded.Name,
@@ -254,12 +270,12 @@ namespace SAL.Flatbed
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin));
 
-			Boolean isDisconnected = plugin.Instance.OnDisconnection(DisconnectMode.UserClosed);
+			Boolean isDisconnected = plugin.Instance?.OnDisconnection(DisconnectMode.UserClosed) ?? false;
 			if(isDisconnected)
 			{
 				this.OnPluginUnloaded(plugin);
 
-				this.Trace.TraceInformation("Unloading plugin ID = {0}", plugin.ID);
+				this.Trace.TraceEvent(TraceEventType.Information, 0, "Unloading plugin ID = {0}", plugin.ID);
 
 				if(!this.Plugins.Remove(plugin.ID))
 					throw new ArgumentException($"Plugin {plugin.ID} not found in the collection");
@@ -272,10 +288,6 @@ namespace SAL.Flatbed
 		public virtual void RemovePlugins()
 			=> this.Plugins.Clear();
 
-		/// <inheritdoc/>
-		void IPluginStorage.SetSetingsProvider(IPluginDescription plugin)
-			=> this.SetSettingsProvider(plugin);
-
 		/// <summary>Set new settings provider</summary>
 		/// <param name="plugin">Plugin that is installed as a settings provider</param>
 		/// <exception cref="ArgumentNullException">Plugin can't be null</exception>
@@ -283,11 +295,10 @@ namespace SAL.Flatbed
 		public void SetSettingsProvider(IPluginDescription plugin)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin), "Plugin is null");
-			if(plugin.Instance == null)
-				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
+			_ = plugin.Instance ?? throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
 
 			//Installing the parent bootloader
-			this.Trace.TraceInformation("Set Settings Provider ID = {0}", plugin.ID);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Set Settings Provider ID = {0}", plugin.ID);
 
 			this._settingsProvider.Insert(0, (ISettingsPluginProvider)plugin.Instance);
 		}
@@ -331,16 +342,20 @@ namespace SAL.Flatbed
 		public void SetPluginProvider(IPluginDescription plugin)
 		{
 			_ = plugin ?? throw new ArgumentNullException(nameof(plugin), "Plugin provider is null");
-			if(plugin.Instance == null)
-				throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Settings Provider", nameof(plugin));
+			_ = plugin.Instance ?? throw new ArgumentException($"Remote plugin {plugin.ID} cant be se as Plugin Provider", nameof(plugin));
 
 			//Installing the parent bootloader
-			this.Trace.TraceInformation("Set Plugin Provider ID = {0}", plugin.ID);
+			this.Trace.TraceEvent(TraceEventType.Information, 0, "Set Plugin Provider ID = {0}", plugin.ID);
 
 			if(this._pluginProvider != null)
 				((IPluginProvider)plugin.Instance).ParentProvider = (IPluginProvider)this._pluginProvider.Instance;
 			this._pluginProvider = plugin;
 		}
+
+		public virtual ITraceSource CreateTraceSource(String name)
+			=> String.IsNullOrEmpty(name)
+				? throw new ArgumentNullException(nameof(name))
+				: new TraceSourceAdapter(name);
 
 		/// <summary>Get stream of all loaded plugins</summary>
 		/// <returns>Enumerated type interface</returns>
@@ -372,7 +387,7 @@ namespace SAL.Flatbed
 					if(uPlugin != null && this.WrapAndLoadPlugin(uPlugin, unresolved.Source, unresolved.Mode))
 					{
 						this._unresolvedPlugins.RemoveAt(loop);
-						loop = this._unresolvedPlugins.Count;//We start the cycle from the beginning, because the element might have already been loaded.
+						loop = this._unresolvedPlugins.Count;//We start the cycle from the end, because the element might have already been loaded.
 					}
 				}
 			}
@@ -414,9 +429,11 @@ namespace SAL.Flatbed
 				Type parameterType = parameter.ParameterType;
 				if(PluginUtils.InstanceOf(parameterType, this.Host.GetType()))
 					args[loop] = this.Host;
+				else if(parameterType == typeof(ITraceSource))
+					args[loop] = this.CreateTraceSource(pluginType.Assembly.GetName().Name);
 				else
 				{
-					if(parameterType == typeof(IEnumerable<>))//TODO: It is necessary to postpone it for post-processing
+					if(parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
 						parameterType = parameterType.GetGenericArguments()[0];
 
 					List<Object> instances = new List<Object>();
@@ -429,7 +446,7 @@ namespace SAL.Flatbed
 						args[loop] = instances[0];
 						break;
 					case 0:
-						this.Trace.TraceInformation("Plugin {0}.ctor[{1}](...{2}...) unresolved reference", pluginType, ctor, parameter.ParameterType);
+						this.Trace.TraceEvent(TraceEventType.Information, 0, "Plugin {0}.ctor[{1}](...{2}...) unresolved reference", pluginType, ctor, parameter.ParameterType);
 						return null;
 					default:
 						//TODO: Plugins with input arrays must be initialized after initialization but before loading.
@@ -456,15 +473,6 @@ namespace SAL.Flatbed
 				{
 					this.Trace.TraceData(TraceEventType.Error, 1, exc);
 				}
-		}
-
-		private static TraceSource CreateTraceSource(String name)
-		{
-			TraceSource result = new TraceSource(name);
-			result.Switch.Level = SourceLevels.All;
-			result.Listeners.Remove("Default");
-			result.Listeners.AddRange(System.Diagnostics.Trace.Listeners);
-			return result;
 		}
 	}
 }

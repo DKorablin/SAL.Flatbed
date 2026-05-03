@@ -9,11 +9,16 @@ namespace SAL.Flatbed
 	{
 		/// <summary>Get plugin by identifier</summary>
 		/// <param name="pluginId">Plugin identifier</param>
-		/// <returns>Plugin interface that was fount by plugin ID</returns>
+		/// <returns>Plugin interface that was found by plugin ID</returns>
 		IPluginDescription this[String pluginId] { get; }
 
+		/// <summary>Get plugin by base plugin interface</summary>
+		/// <param name="plugin">The plugin instance</param>
+		/// <returns>Plugin interface that was found by plugin instance or null when plugin instance is not found</returns>
+		IPluginDescription this[IPlugin plugin] { get; }
+
 		/// <summary>Count of all loaded plugins</summary>
-		Int64 Count{get;}
+		Int64 Count { get; }
 
 		/// <summary>The last plugin provider that was loaded from plugin source</summary>
 		IPluginProvider PluginProvider { get; }
@@ -72,15 +77,15 @@ namespace SAL.Flatbed
 
 		/// <summary>Set settings provider</summary>
 		/// <param name="plugin">Base plugin interface that resolves base interface as settings provider</param>
-		[Obsolete("Use SetSettingsProvider method instead")]
-		void SetSetingsProvider(IPluginDescription plugin);
-
-		/// <summary>Set settings provider</summary>
-		/// <param name="plugin">Base plugin interface that resolves base interface as settings provider</param>
 		void SetSettingsProvider(IPluginDescription plugin);
 
 		/// <summary>Set plugins provider</summary>
 		/// <param name="plugin">Plugin that is installed as a new plugin provider</param>
 		void SetPluginProvider(IPluginDescription plugin);
+
+		/// <summary>Creates trace source by name</summary>
+		/// <param name="name">Trace source name</param>
+		/// <returns>Trace source with the name</returns>
+		ITraceSource CreateTraceSource(String name);
 	}
 }

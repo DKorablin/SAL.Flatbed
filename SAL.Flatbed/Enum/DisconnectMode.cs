@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SAL.Flatbed
+﻿namespace SAL.Flatbed
 {
 	/// <summary>Mode how plugin is disconnected from host</summary>
 	public enum DisconnectMode

@@ -7,7 +7,7 @@ namespace SAL.Flatbed
 	/// <summary>Description of public plugin method</summary>
 	public class PluginMethodInfo : PluginMemberInfo, IPluginMethodInfo
 	{
-		private new MethodBase Member { get => (MethodBase)base.Member; }
+		private new MethodBase Member => (MethodBase)base.Member;
 
 		/// <summary>Method invocation result type</summary>
 		public IPluginTypeInfo ReturnType
@@ -21,6 +21,9 @@ namespace SAL.Flatbed
 			}
 		}
 
+		/// <summary>Input arguments count</summary>
+		public Int32 Count => this.Member.GetParameters().Length;
+
 		/// <summary>Create instance of plugin method description</summary>
 		/// <param name="method">Method reflection</param>
 		/// <param name="target">Target where method is declared</param>
@@ -29,9 +32,6 @@ namespace SAL.Flatbed
 			: base(method, target, parent)
 		{
 		}
-
-		/// <summary>Input arguments count</summary>
-		public Int32 Count { get => this.Member.GetParameters().Length; }
 
 		/// <summary>Get all arguments that method accept</summary>
 		/// <returns>Array of all method arguments</returns>
@@ -59,7 +59,7 @@ namespace SAL.Flatbed
 				} catch(Exception exc)
 				{
 					exc.Data.Add("MethodName", base.Name);
-					exc.Data.Add("TypeName", base.TypeName);
+					exc.Data.Add(nameof(base.TypeName), base.TypeName);
 					throw;
 				}
 			}
